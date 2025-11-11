@@ -1,0 +1,10 @@
+<svg id="_20X20_photo_Back" data-name="20X20 photo Back" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_4536" data-name="Rectangle 4536" width="20" height="20" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Mask_Group_479" data-name="Mask Group 479" clip-path="url(#clip-path)">
+    <path id="hierarchy" d="M8.6,8.372V6.279H4.419v9.535a.233.233,0,0,0,.233.233H8.6V13.953a1.63,1.63,0,0,1,1.628-1.628h2.791a.7.7,0,0,1,.493.2l.726.726h3.432A1.63,1.63,0,0,1,19.3,14.884v4.651a1.63,1.63,0,0,1-1.628,1.628H10.233A1.63,1.63,0,0,1,8.6,19.535V17.442H4.651a1.63,1.63,0,0,1-1.628-1.628V1.86a.7.7,0,1,1,1.4,0V4.884H8.6V2.791a1.63,1.63,0,0,1,1.628-1.628h2.791a.7.7,0,0,1,.493.2l.726.726h3.432A1.63,1.63,0,0,1,19.3,3.721V8.372A1.63,1.63,0,0,1,17.675,10H10.233A1.63,1.63,0,0,1,8.6,8.372Z" transform="translate(-1.163 -1.162)" fill="#404040"/>
+  </g>
+</svg>

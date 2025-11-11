@@ -1,0 +1,14 @@
+<svg id="_10x10_flag_photo" data-name="10x10 flag photo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="10" height="10" viewBox="0 0 10 10">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_4644" data-name="Rectangle 4644" width="10" height="10" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Mask_Group_486" data-name="Mask Group 486" clip-path="url(#clip-path)">
+    <g id="Icon" transform="translate(-0.4 -0.4)">
+      <g id="_45">
+        <path id="Path_22032" data-name="Path 22032" d="M8.124,4.639,4.2.717A1.079,1.079,0,1,0,2.677,2.243L5.838,5.4,2.677,8.559A1.079,1.079,0,0,0,4.2,10.084L8.124,6.162A1.079,1.079,0,0,0,8.124,4.639Z" fill="#898989"/>
+      </g>
+    </g>
+  </g>
+</svg>

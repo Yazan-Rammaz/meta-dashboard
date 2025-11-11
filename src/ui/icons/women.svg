@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+<defs>
+<filter id="shadow" x="0" y="0" width="38.059" height="38.081" filterUnits="userSpaceOnUse">
+<feOffset dy="2" input="SourceAlpha"/>
+<feGaussianBlur stdDeviation="2" result="blur"/>
+<feFlood flood-opacity="0.161"/>
+<feComposite operator="in" in2="blur"/>
+<feComposite in="SourceGraphic"/>
+</filter>
+</defs>
+<g id="Mask_Group_5" data-name="Mask Group 5" transform="translate(-324 -183)" clipPath="url(#clip-path)">
+<path id="woman" d="M16.6,15.041l-3.19-.8-.184-.737a10.561,10.561,0,0,0,3.383-1.059.416.416,0,0,0,.2-.333.423.423,0,0,0-.159-.357c-.015-.01-1.5-1.239-1.5-5.5,0-3.591-.844-5.412-2.5-5.412H12.4A2.664,2.664,0,0,0,10.155.016c-1.564,0-5,1.573-5,6.244,0,4.258-1.488,5.487-1.5,5.5a.416.416,0,0,0,.035.69,10.36,10.36,0,0,0,3.386,1.062l-.184.735-3.189.8A4.672,4.672,0,0,0,.164,19.583.416.416,0,0,0,.581,20h19.15a.416.416,0,0,0,.416-.416A4.673,4.673,0,0,0,16.6,15.041Z" transform="translate(323.844 183.001)" fill="#5d5d5d"/>
+</g>
+</svg>

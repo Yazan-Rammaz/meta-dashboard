@@ -1,0 +1,17 @@
+<svg id="_20X20_photo_Back" data-name="20X20 photo Back" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_4536" data-name="Rectangle 4536" width="20" height="20" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Mask_Group_480" data-name="Mask Group 480" clip-path="url(#clip-path)">
+    <g id="menu" transform="translate(-1.163 -1.162)">
+      <path id="Path_22010" data-name="Path 22010" d="M20.465,5.349h-9.3a.7.7,0,1,1,0-1.4h9.3a.7.7,0,1,1,0,1.4Z" fill="#404040"/>
+      <path id="Path_22011" data-name="Path 22011" d="M16.744,9.07H11.163a.7.7,0,1,1,0-1.4h5.581a.7.7,0,0,1,0,1.4Z" fill="#404040"/>
+      <path id="Path_22012" data-name="Path 22012" d="M20.465,14.651h-9.3a.7.7,0,1,1,0-1.4h9.3a.7.7,0,1,1,0,1.4Z" fill="#404040"/>
+      <path id="Path_22013" data-name="Path 22013" d="M16.744,18.372H11.163a.7.7,0,1,1,0-1.4h5.581a.7.7,0,0,1,0,1.4Z" fill="#404040"/>
+      <rect id="Rectangle_5581" data-name="Rectangle 5581" width="6.977" height="6.977" rx="1.628" transform="translate(1.163 3.023)" fill="#404040"/>
+      <rect id="Rectangle_5582" data-name="Rectangle 5582" width="6.977" height="6.977" rx="1.628" transform="translate(1.163 12.326)" fill="#404040"/>
+    </g>
+  </g>
+</svg>

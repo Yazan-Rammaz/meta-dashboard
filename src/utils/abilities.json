@@ -1,0 +1,7 @@
+[
+    "SUPER_ADMIN",
+    "READ_ROLES",
+    "CREATE_ROLES",
+    "UPDATE_ROLES",
+    "DELETE_ROLES"
+]

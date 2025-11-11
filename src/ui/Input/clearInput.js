@@ -1,0 +1,10 @@
+export default function ClearInputIcon() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="10.046" height="10.046" viewBox="0 0 10.046 10.046">
+            <g id="Group_4707" data-name="Group 4707" transform="matrix(0.695, 0.719, -0.719, 0.695, 5.171, -3.461)">
+                <line id="Line_962" data-name="Line 962" x1="12" transform="translate(0 6)" fill="none" stroke="#fd7878" strokeLinecap="round" strokeWidth="1" />
+                <line id="Line_963" data-name="Line 963" x1="12" transform="translate(6 0) rotate(90)" fill="none" stroke="#fd7878" strokeLinecap="round" strokeWidth="1" />
+            </g>
+        </svg>
+    )
+}
