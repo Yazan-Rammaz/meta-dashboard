@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  haproxy:
+    image: haproxy:latest
+    ports:
+      - "80:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    privileged: true
+    user: root

@@ -1,0 +1,16 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.removeUnusedImports": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "typescript.preferences.organizeImports": true,
+  "typescript.suggest.autoImports": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": true,
+  "prettier.singleQuote": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.preferences.organizeImports": true,
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+  "prettier.trailingComma": "all"
+}
