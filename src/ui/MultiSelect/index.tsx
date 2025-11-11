@@ -1,5 +1,5 @@
-import { styled } from '@mui/material';
 import ClearMultiSelectIcon from '@/ui/MultiSelect/clearInput';
+import { styled } from '@mui/material';
 import { useState } from 'react';
 // import ScrollbarWrapedChilds from '@/ui/ScrollbarWrappedChilds';
 import Scrollbar from '@/components/Scrollbar';
@@ -33,7 +33,7 @@ const MultiSelectContainer = styled('div')(
       padding-right: 10px;
       position: relative;
       height: 28px;
-      overflow: visible;
+      /* overflow: visible; */ /* Remove or comment out overflow: visible */
     `
 );
 const MultiSelectTitle = styled('div')(
@@ -51,6 +51,10 @@ const AsyncMultiSelectItemsContainer = styled('div')(
         width: calc(100% - 10px);
          background-color: transparent;
          height: 200px;
+         overflow-y: auto; /* Ensure vertical scrolling */
+         box-sizing: border-box; /* Include padding and border in the element's total width and height */
+         padding: 5px; /* Add some padding to prevent content from touching the edges */
+         max-height: 200px; /* Explicitly set max-height */
     `
 );
 const AsyncMultiSelectItem = styled('div')(
@@ -82,8 +86,10 @@ const SelectedItemsContainer = styled('div')(
     margin-right: 10px;
     border-radius: 10px;
     padding: 5px;
-    height: 100px;
+    min-height: 50px; /* Allow it to grow */
+    max-height: 180px; /* Keep a max height for scrolling */
     width: -webkit-fill-available;
+    overflow-y: auto; /* Add overflow-y for scrolling */
     `
 );
 const CustomSelectItemSelected = styled('div')(
@@ -113,7 +119,7 @@ interface MultiSelectProps {
   value?: string;
   onChange: (value: string) => void;
   onSelect: (item: {
-    value?: number;
+    value?: string;
     title?: string;
     description?: string;
   }) => void;
@@ -122,8 +128,8 @@ interface MultiSelectProps {
   disabled: boolean;
   title?: string;
   size: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
-  data?: Array<{ value: number; title: string; description?: string }>;
-  selected?: Array<{ value?: number; title?: string; description?: string }>;
+  data?: Array<{ value: string; title: string; description?: string }>;
+  selected?: Array<{ value?: string; title?: string; description?: string }>;
 }
 export default function AsyncMultiSelect({
   onChange,

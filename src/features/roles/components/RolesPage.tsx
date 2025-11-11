@@ -4,13 +4,12 @@ import SuspenseLoader from '@/components/SuspenseLoader';
 import RoleListItem from '@/features/roles/components/RoleListItem';
 import RoleModal from '@/features/roles/components/RoleModal';
 import { TopNav } from '@/features/shared/components/DashboardShared';
-import { Role, RoleTranslation } from '@/models/roles';
+import { Role } from '@/models/roles';
 import HRMIcon from '@/ui/icons/HRM.svg';
 import ModalComponent from '@/ui/Modal';
 import ModalHeader from '@/ui/Modal/ModalHeader';
-import ShowTrans, { transformTranslations } from '@/utils/showTrans';
 import useTrans from '@/utils/translation_util';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
   useAddRoleMutation,
@@ -22,7 +21,7 @@ import {
 const initialState: Role = {
   id: undefined,
   permissions: [],
-  role_translations: [],
+  // role_translations: [],
   title: ''
 };
 
@@ -61,14 +60,14 @@ function HRM() {
   const [mode, setMode] = useState<'add' | 'update' | 'preview'>('preview');
   const [currentData, setCurrentData] = useState<Role>(initialState);
 
-  const translatedRoleName = useMemo(() => {
-    if (!currentData.role_translations) {
-      return {};
-    }
-    return transformTranslations<RoleTranslation>(
-      currentData.role_translations
-    );
-  }, [currentData.role_translations]);
+  // const translatedRoleName = useMemo(() => {
+  //   if (!currentData.role_translations) {
+  //     return {};
+  //   }
+  //   return transformTranslations<RoleTranslation>(
+  //     currentData.role_translations
+  //   );
+  // }, [currentData.role_translations]);
 
   useEffect(() => {
     if (
@@ -131,17 +130,7 @@ function HRM() {
                   hasDelete={false}
                   hasAddChild={false}
                 >
-                  <>
-                    {(ShowTrans({
-                      Translations: translatedRoleName,
-                      field_name: 'name'
-                    }) ?? ''.length > 0)
-                      ? ShowTrans({
-                          Translations: translatedRoleName,
-                          field_name: 'name'
-                        })
-                      : currentData.title}
-                  </>
+                  <>{currentData.name || currentData.title}</>
                 </ListItemComponent>
               ) : (
                 <></>
@@ -181,7 +170,7 @@ function HRM() {
                   setOpen(false);
                   setCurrentData(initialState);
                 }}
-                title={currentData?.title ? currentData.title : trans('Role')}
+                title={currentData?.name ? currentData.name : trans('Role')}
                 mode={mode}
                 icon={<></>}
                 edit={() => {

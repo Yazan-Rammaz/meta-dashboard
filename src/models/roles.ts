@@ -1,20 +1,21 @@
 export interface Role {
   id?: number;
+  name?: string;
   title?: string;
   programming_name?: string | null;
   programing_name?: string | null;
-  role_translations?: RoleTranslation[];
-  permissions?: Permission[];
+  permissions?: string[];
 }
 
 export interface Permission {
-  description?: string;
   id?: string;
-  title?: string;
+  key?: string;
+  description?: string;
   created_at?: Date | null;
-  updated_at?: Date | null;
-  deleted_at?: Date | null;
-  pivot?: Pivot;
+  // title?: string;
+  // updated_at?: Date | null;
+  // deleted_at?: Date | null;
+  // pivot?: Pivot;
 }
 
 export interface RoleTranslation {

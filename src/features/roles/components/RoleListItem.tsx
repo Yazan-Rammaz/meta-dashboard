@@ -1,7 +1,5 @@
 import ListItemComponent from '@/components/List/ListItem';
-import { Role, RoleTranslation } from '@/models/roles';
-import ShowTrans, { transformTranslations } from '@/utils/showTrans';
-import { useMemo } from 'react';
+import { Role } from '@/models/roles';
 
 interface RoleListItemProps {
   one: Role;
@@ -32,12 +30,12 @@ const RoleListItem: React.FC<RoleListItemProps> = ({
   setCurrentData,
   setOpen
 }) => {
-  const translatedOneRoleName = useMemo(() => {
-    if (!one.role_translations) {
-      return {};
-    }
-    return transformTranslations<RoleTranslation>(one.role_translations);
-  }, [one.role_translations]);
+  // const translatedOneRoleName = useMemo(() => {
+  //   if (!one.role_translations) {
+  //     return {};
+  //   }
+  //   return transformTranslations<RoleTranslation>(one.role_translations);
+  // }, [one.role_translations]);
 
   return (
     <ListItemComponent
@@ -60,17 +58,7 @@ const RoleListItem: React.FC<RoleListItemProps> = ({
         setOpen(true);
       }}
     >
-      <>
-        {(ShowTrans({
-          Translations: translatedOneRoleName,
-          field_name: 'name'
-        }) ?? ''.length > 0)
-          ? ShowTrans({
-              Translations: translatedOneRoleName,
-              field_name: 'name'
-            })
-          : one.title}
-      </>
+      <>{one.name || one.title}</>
     </ListItemComponent>
   );
 };

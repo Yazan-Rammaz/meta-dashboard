@@ -2,12 +2,13 @@ import { api } from '@/services/auth';
 
 export interface Permission {
   id: string;
-  name: string;
-  guard_name: string;
-  title: string; // Added title property
-  description: string; // Added description property
+  key: string;
+  description: string;
   created_at: string;
-  updated_at: string;
+  // name: string;
+  // guard_name: string;
+  // title: string; // Added title property
+  // updated_at: string;
 }
 
 export interface GetPermissionsResponse {

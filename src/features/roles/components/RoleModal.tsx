@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react';
-import { useGetlanguagesQuery } from '@/services/languages';
-import { useGetAllPermissionsBySearchMutation } from '@/services/permissions';
+import { Role } from '@/models/roles';
+import {
+  useGetAllPermissionsBySearchMutation,
+  useGetpermissionsQuery
+} from '@/services/permissions';
 import ModalActionButton from '@/ui/Button/modalActionButton';
 import Input from '@/ui/Input';
 import ModalBody from '@/ui/Modal/ModalBody';
 import ModalSection from '@/ui/ModalSection';
 import AsyncMultiSelect from '@/ui/MultiSelect';
-import { Role, RoleTranslation } from '@/models/roles';
 import useTrans from '@/utils/translation_util';
+import { useEffect, useState } from 'react';
 
 interface Props {
   currentData: Role;
@@ -18,7 +20,7 @@ interface Props {
 }
 
 interface SelectedPermissionElement {
-  value?: number;
+  value?: string;
   title?: string;
   description?: string;
 }
@@ -31,35 +33,33 @@ export default function RoleModal({
   edit_button_clk
 }: Props) {
   const trans = useTrans();
-  const { data: languages, isLoading: isLoadingLanguages } =
-    useGetlanguagesQuery();
+  const { data: allPermissions, isLoading: isLoadingAllPermissions } =
+    useGetpermissionsQuery();
   const [
     searchPermissions,
-    { isLoading: isFetchingPermissions, data: Permissions }
+    { isLoading: isFetchingPermissions, data: searchedPermissions }
   ] = useGetAllPermissionsBySearchMutation();
   const [searchPermission, setSearchPermission] = useState<string>('');
   const [selectedPermission, setSelectedPermission] = useState<
     SelectedPermissionElement[]
   >([]);
 
-  const initialRoleTranslationState: RoleTranslation = {
-    id: 0, // Assuming a default ID for new translations
-    name: '',
-    language_code: '', // Will be overridden by language.language_code
-    role_id: 0 // Assuming a default role_id
-  };
+  const displayedPermissions = searchPermission
+    ? searchedPermissions
+    : allPermissions;
 
   useEffect(() => {
     setSelectedPermission(
       currentData?.permissions?.map((one) => {
+        const matchingPermission = allPermissions?.find((p) => p.key === one);
         return {
-          value: one.id ? Number(one.id) : undefined,
-          title: one.title,
-          description: one.description
+          value: one as unknown as string,
+          title: matchingPermission?.description || one,
+          description: matchingPermission?.description || one
         };
       }) ?? []
     );
-  }, [currentData]);
+  }, [currentData, allPermissions]);
 
   return (
     <ModalBody>
@@ -68,23 +68,23 @@ export default function RoleModal({
           <>
             <Input
               size={4}
-              value={currentData.title || ''}
+              value={currentData.name || ''}
               disabled={mode === 'preview'}
               clear={() => {
                 setCurrentData({
                   ...currentData,
-                  title: ''
+                  name: ''
                 });
               }}
               onChange={(value: any) => {
                 setCurrentData({
                   ...currentData,
-                  title: value
+                  name: value
                 });
               }}
               type="text"
             />
-            {!isLoadingLanguages &&
+            {/* {!isLoadingLanguages &&
               languages?.length &&
               languages?.map((language, index) => (
                 <Input
@@ -163,7 +163,7 @@ export default function RoleModal({
                   }}
                   type="text"
                 />
-              ))}
+              ))} */}
           </>
         </ModalSection>
         <ModalSection title={trans('Role Permissions')}>
@@ -183,25 +183,25 @@ export default function RoleModal({
               searchPermissions(value);
             }}
             data={
-              isFetchingPermissions
+              isFetchingPermissions || isLoadingAllPermissions
                 ? []
-                : Permissions?.map((one) => {
+                : displayedPermissions?.map((one) => {
                     return {
-                      value: Number(one.id),
-                      title: one.title,
+                      value: one.key as unknown as string, // Use one.key
+                      title: one.description, // Use one.description for display
                       description: one.description
                     };
                   })
             }
             size={10}
             onSelect={(selected: {
-              value?: number;
+              value?: string;
               title?: string;
               description?: string;
             }) => {
               if (
                 currentData?.permissions?.some(
-                  (one) => one.id && Number(one.id) === selected.value
+                  (one) => one === selected.value // Compare string directly
                 )
               ) {
                 setSelectedPermission([
@@ -213,7 +213,7 @@ export default function RoleModal({
                   ...currentData,
                   permissions: [
                     ...currentData.permissions.filter(
-                      (one) => one.id && Number(one.id) !== selected.value
+                      (one) => one !== selected.value
                     )
                   ]
                 });
@@ -223,10 +223,7 @@ export default function RoleModal({
                   ...currentData,
                   permissions: [
                     ...(currentData?.permissions ?? []),
-                    {
-                      id: selected.value?.toString() ?? '',
-                      title: selected.title || ''
-                    }
+                    selected.value || '' // Add string directly
                   ]
                 });
               }
