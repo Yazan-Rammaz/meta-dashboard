@@ -198,7 +198,6 @@ export default function AsyncMultiSelect({
       </MultiSelectContainer>
       {selected && selected.length ? (
         <SelectedItemsContainer>
-          {/* <ScrollbarWrapedChilds> */}
           {selected?.map((one, index) => (
             <ToolTip
               key={index}
@@ -207,7 +206,6 @@ export default function AsyncMultiSelect({
               <CustomSelectItemSelected>{one.title}</CustomSelectItemSelected>
             </ToolTip>
           ))}
-          {/* </ScrollbarWrapedChilds> */}
         </SelectedItemsContainer>
       ) : (
         <></>
