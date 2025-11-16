@@ -1,24 +1,24 @@
 import ListComponent from '@/components/List';
 import ListItemComponent from '@/components/List/ListItem';
-import { TopNav } from '@/features/shared/components/DashboardShared';
-import LanguagesIcon from '@/ui/icons/languages.svg';
-import Image from 'next/image';
-import {
-  useGetlanguagesQuery,
-  useAddLanguageMutation,
-  useUpdateLanguageMutation,
-  useDeleteLanguageMutation
-} from 'src/services/languages';
 import SuspenseLoader from '@/components/SuspenseLoader';
 import LanguageModal from '@/features/languages/components/LanguageModal';
-import { useEffect, useState } from 'react';
+import { TopNav } from '@/features/shared/components/DashboardShared';
 import { Language } from '@/models/languages';
+import EmptyIcon from '@/ui/icons/emptyIcon.svg';
+import LanguagesIcon from '@/ui/icons/languages.svg';
 import ModalComponent from '@/ui/Modal';
 import ModalHeader from '@/ui/Modal/ModalHeader';
-import useTrans from '@/utils/translation_util';
-import { Helmet } from 'react-helmet-async';
-import EmptyIcon from '@/ui/icons/emptyIcon.svg';
 import ShowTrans, { transformTranslations } from '@/utils/showTrans';
+import useTrans from '@/utils/translation_util';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import {
+  useAddLanguageMutation,
+  useDeleteLanguageMutation,
+  useGetlanguagesQuery,
+  useUpdateLanguageMutation
+} from 'src/services/languages';
 
 interface MapProps {
   elements?: Array<Language>;
@@ -167,7 +167,7 @@ const MapElements = ({
               addChild={() => addChild && addChild(element)}
               hasAddChild={true}
               hasDelete={true}
-              deleteItem={() => deleteItem && deleteItem(element)}
+              handleDelete={() => deleteItem && deleteItem(element)}
               forceOpen={
                 add_in != null &&
                 element.language_code === (add_in as string) &&

@@ -25,7 +25,7 @@ interface SelectedPermissionElement {
   description?: string;
 }
 
-export default function RoleModal({
+export default function RoleForm({
   currentData,
   setCurrentData,
   mode,
@@ -67,6 +67,7 @@ export default function RoleModal({
         <ModalSection title={trans('Role Title & Name')}>
           <>
             <Input
+              title={trans('Name')}
               size={4}
               value={currentData.name || ''}
               disabled={mode === 'preview'}

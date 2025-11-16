@@ -19,7 +19,7 @@ interface FollowerItem {
   name: string;
 }
 interface Props {
-  table_icon?: { src: string } | string;
+  table_icon?: { src: string } | string | React.ComponentType<any>;
   top_name_clk?: () => void;
   table_name?: string;
   follower?: Array<FollowerItem>;
@@ -57,16 +57,34 @@ export const TopNav = ({
     >
       <div className="lang-info">
         <div className="lang-icon header-icon">
-          <Image
-            alt="Languages"
-            src={
-              typeof table_icon === 'string'
-                ? table_icon
-                : (table_icon as { src?: string })?.src || ''
-            }
-            width={20}
-            height={20}
-          />
+          {typeof table_icon === 'function' ? (
+            <div
+              style={{
+                width: '20px',
+                height: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              {/* Render the component by assigning it to a capitalized variable */}
+              {(() => {
+                const TableIcon = table_icon as React.ComponentType<any>;
+                return <TableIcon />;
+              })()}
+            </div>
+          ) : (
+            <Image
+              alt={table_name || 'Icon'}
+              src={
+                typeof table_icon === 'string'
+                  ? table_icon
+                  : (table_icon as { src?: string })?.src || ''
+              }
+              width={20}
+              height={20}
+            />
+          )}
         </div>
         <div
           className="lang-name"

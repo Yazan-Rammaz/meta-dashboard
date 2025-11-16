@@ -68,7 +68,7 @@ const unauthBaseQuery = async (args: any, api: any, extraOptions: any) => {
 };
 
 export const api = createApi({
-  tagTypes: ['Roles', 'Languages'],
+  tagTypes: ['Roles', 'Languages', 'Users', 'Clients'],
   refetchOnMountOrArgChange: 30,
   refetchOnFocus: true,
   refetchOnReconnect: true,

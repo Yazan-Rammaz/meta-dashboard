@@ -1,7 +1,12 @@
 import { SidebarContext } from '@/contexts/SidebarContext';
 import OpenMenuSVG from '@/layouts/SidebarLayout/Sidebar/SidebarMenu/sidebaropen.svg';
+import { PAGE_PERMISSIONS } from '@/types/permissions';
+import DocsIcon from '@/ui/icons/Docs';
 import HomeIcon from '@/ui/icons/home.svg';
 import HRMIcon from '@/ui/icons/HRM.svg';
+import InfoIcon from '@/ui/icons/Info';
+import LinksIcon from '@/ui/icons/Links';
+import UsersIcon, { default as ClientsIcon } from '@/ui/icons/user.svg'; // Import the new UsersIcon
 import CanCall from '@/utils/ability';
 import useTrans from '@/utils/translation_util';
 import { styled } from '@mui/material';
@@ -230,14 +235,14 @@ interface SidebarMenuItemData {
   link: string;
   id: number;
   label: string;
-  icon: { src: string } | string;
+  icon: { src: string } | string | React.ComponentType<any>;
   permission?: string;
 }
 
 interface SidebarMenuItemProps {
   item: SidebarMenuItemData;
   renderIcon: (
-    IconComponent: { src: string } | string,
+    IconComponent: { src: string } | string | React.ComponentType<any>,
     active: boolean,
     id: number
   ) => JSX.Element;
@@ -282,10 +287,37 @@ function SidebarMenu() {
   const pathname = usePathname();
 
   const renderIcon = (
-    IconComponent: { src: string } | string,
+    IconComponent: { src: string } | string | React.ComponentType<any>,
     active: boolean,
     id: number
   ) => {
+    if (typeof IconComponent === 'function') {
+      const Icon = IconComponent;
+      return (
+        <div
+          style={{
+            width: '22px',
+            height: '22px',
+            marginRight: sidebarToggle ? '12px' : '0',
+            marginLeft: sidebarToggle ? '0' : '0',
+            padding: sidebarToggle ? '0' : '4px',
+            minWidth: '22px',
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            transform: active ? 'scale(1.05)' : 'scale(1)',
+            opacity: 1,
+            visibility: 'visible',
+            color: active ? '#404040' : '#A2A0A0'
+          }}
+        >
+          <Icon />
+        </div>
+      );
+    }
+
     const imageUrl =
       typeof IconComponent === 'string' ? IconComponent : IconComponent.src;
     return (
@@ -318,14 +350,50 @@ function SidebarMenu() {
       link: '/',
       id: 1,
       label: 'Dashboard',
-      icon: HomeIcon
+      icon: HomeIcon,
+      permission: PAGE_PERMISSIONS.DASHBOARD
     },
     {
       link: '/roles',
       id: 2,
       label: 'Roles',
       icon: HRMIcon,
-      permission: ''
+      permission: '' // PAGE_PERMISSIONS.ROLES
+    },
+    {
+      link: '/api-keys',
+      id: 3,
+      label: 'API Keys',
+      icon: LinksIcon,
+      permission: PAGE_PERMISSIONS.API_KEYS
+    },
+    {
+      link: '/clients',
+      id: 4,
+      label: 'Clients',
+      icon: ClientsIcon,
+      permission: PAGE_PERMISSIONS.CLIENTS
+    },
+    {
+      link: '/messages',
+      id: 5,
+      label: 'Messages',
+      icon: DocsIcon,
+      permission: PAGE_PERMISSIONS.MESSAGES
+    },
+    {
+      link: '/users',
+      id: 6,
+      label: 'Users',
+      icon: UsersIcon,
+      permission: PAGE_PERMISSIONS.USERS
+    },
+    {
+      link: '/webhooks',
+      id: 7,
+      label: 'Webhooks',
+      icon: InfoIcon,
+      permission: PAGE_PERMISSIONS.WEBHOOKS
     }
   ];
 

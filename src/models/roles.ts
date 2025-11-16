@@ -5,6 +5,7 @@ export interface Role {
   programming_name?: string | null;
   programing_name?: string | null;
   permissions?: string[];
+  description?: string | null;
 }
 
 export interface Permission {

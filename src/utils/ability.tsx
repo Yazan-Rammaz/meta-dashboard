@@ -1,4 +1,5 @@
 import { useGetpermissionsQuery } from '@/services/permissions';
+import { PermissionKey } from '@/types/permissions';
 import { ReactElement } from 'react';
 
 export interface CanCallProps {
@@ -10,8 +11,9 @@ export default function CanCall({ children, permission }: CanCallProps) {
 
   const permissionGranted = isLoading
     ? false
-    : permissions?.some(
-        (one) => one.key === permission || one.key === 'SUPER_ADMIN'
+    : permission === '' ||
+      permissions?.some(
+        (one) => one.key === permission || one.key === PermissionKey.SUPER_ADMIN
       );
 
   if (!permissionGranted) return <></>;

@@ -1,11 +1,11 @@
 import ListItemComponent from '@/components/List/ListItem';
-import { Role } from '@/models/roles';
+import { Client } from '@/models/clients';
 import ToolTip from '@/ui/Tooltip';
 
-interface RoleListItemProps {
-  one: Role;
+interface ClientListItemProps {
+  one: Client;
   index: number;
-  currentData: Role;
+  currentData: Client;
   isUpdateLoading: boolean;
   isDeleteLoading: boolean;
   isUpdateSuccess: boolean;
@@ -13,12 +13,12 @@ interface RoleListItemProps {
   isUpdateError: boolean;
   isDeleteError: boolean;
   setMode: (mode: 'add' | 'update' | 'preview') => void;
-  setCurrentData: (data: Role) => void;
+  setCurrentData: (data: Client) => void;
   setOpen: (open: boolean) => void;
-  handleDeleteRole: (role: Role) => void; // Add handleDeleteRole prop
+  handleDeleteClient: (client: Client) => void; // Add handleDeleteClient prop
 }
 
-const RoleListItem: React.FC<RoleListItemProps> = ({
+const ClientListItem: React.FC<ClientListItemProps> = ({
   one,
   index,
   currentData,
@@ -31,15 +31,8 @@ const RoleListItem: React.FC<RoleListItemProps> = ({
   setMode,
   setCurrentData,
   setOpen,
-  handleDeleteRole // Destructure handleDeleteRole
+  handleDeleteClient // Destructure handleDeleteClient
 }) => {
-  // const translatedOneRoleName = useMemo(() => {
-  //   if (!one.role_translations) {
-  //     return {};
-  //   }
-  //   return transformTranslations<RoleTranslation>(one.role_translations);
-  // }, [one.role_translations]);
-
   return (
     <ListItemComponent
       isLoading={
@@ -60,27 +53,40 @@ const RoleListItem: React.FC<RoleListItemProps> = ({
         setCurrentData(one);
         setOpen(true);
       }}
-      handleDelete={() => handleDeleteRole(one)} // Pass role to handleDeleteRole
+      handleDelete={() => handleDeleteClient(one)} // Pass client to handleDeleteClient
     >
       <div>
-        <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>
-          {one.name || one.title}
-        </div>
-        {one.description && (
-          <div style={{ fontSize: '0.8em', color: '#555', marginTop: '4px' }}>
-            Description: {one.description}
+        <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>{one.name}</div>
+        {one.display_phone_number && (
+          <div style={{ fontSize: '0.8em', color: '#888' }}>
+            Phone Number: {one.display_phone_number}
           </div>
         )}
-        {one.permissions && (
-          <ToolTip text={one.permissions.join(', ')}>
+        {one.whatsapp_business_id && (
+          <div style={{ fontSize: '0.8em', color: '#555', marginTop: '4px' }}>
+            WhatsApp Business ID: {one.whatsapp_business_id}
+          </div>
+        )}
+        {one.webhook_url && (
+          <ToolTip text={one.webhook_url}>
             <div style={{ fontSize: '0.8em', color: '#555' }}>
-              Permissions: {one.permissions.length}
+              Webhook URL: {one.webhook_url}
             </div>
           </ToolTip>
+        )}
+        {one.rate_limit_per_minute && (
+          <div style={{ fontSize: '0.8em', color: '#555' }}>
+            Rate Limit Per Minute: {one.rate_limit_per_minute}
+          </div>
+        )}
+        {one.status && (
+          <div style={{ fontSize: '0.8em', color: '#555' }}>
+            Status: {one.status}
+          </div>
         )}
       </div>
     </ListItemComponent>
   );
 };
 
-export default RoleListItem;
+export default ClientListItem;

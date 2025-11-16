@@ -1,16 +1,16 @@
-import { styled, Collapse } from '@mui/material';
-import { ReactElement, useEffect, useState } from 'react';
-import Opened from '@/ui/icons/opened.svg';
-import Closed from '@/ui/icons/closed.svg';
 import Add from '@/ui/icons/add.js';
+import Closed from '@/ui/icons/closed.svg';
 import Delete from '@/ui/icons/delete.js';
-import ToolTip from '@/ui/Tooltip';
-import useTrans from '@/utils/translation_util';
-import CanCall from '@/utils/ability';
+import Opened from '@/ui/icons/opened.svg';
 import Spinner from '@/ui/Spinner';
-import SpinnerSuccess from '@/ui/Spinner/spinner_success';
 import SpinnerError from '@/ui/Spinner/spinner_error';
+import SpinnerSuccess from '@/ui/Spinner/spinner_success';
+import ToolTip from '@/ui/Tooltip';
+import CanCall from '@/utils/ability';
+import useTrans from '@/utils/translation_util';
+import { Collapse, styled } from '@mui/material';
 import Image from 'next/image';
+import { ReactElement, useEffect, useState } from 'react';
 
 const ListItemAllContainer = styled('div')(
   () => `
@@ -110,7 +110,7 @@ interface ListItemProps {
   hasAddChild?: boolean;
   addChild?: () => void;
   hasDelete?: boolean;
-  deleteItem?: () => void;
+  handleDelete?: () => void; // Changed from deleteItem to handleDelete
   forceOpen?: boolean;
   add_permission?: string;
   delete_permission?: string;
@@ -126,7 +126,7 @@ export default function ListItemComponent({
   hasNested,
   nestedCount,
   addChild,
-  deleteItem,
+  handleDelete, // Changed from deleteItem to handleDelete
   hasAddChild,
   hasDelete,
   forceOpen,
@@ -252,7 +252,7 @@ export default function ListItemComponent({
                 <ToolTip text={trans('Delete')}>
                   <Option
                     onClick={() => {
-                      if (deleteItem) deleteItem();
+                      if (handleDelete) handleDelete(); // Changed from deleteItem to handleDelete
                     }}
                   >
                     <Delete />

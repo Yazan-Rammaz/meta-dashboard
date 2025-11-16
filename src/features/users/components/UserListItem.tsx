@@ -1,11 +1,10 @@
 import ListItemComponent from '@/components/List/ListItem';
-import { Role } from '@/models/roles';
-import ToolTip from '@/ui/Tooltip';
+import { User } from '@/models/users';
 
-interface RoleListItemProps {
-  one: Role;
+interface UserListItemProps {
+  one: User;
   index: number;
-  currentData: Role;
+  currentData: User;
   isUpdateLoading: boolean;
   isDeleteLoading: boolean;
   isUpdateSuccess: boolean;
@@ -13,12 +12,12 @@ interface RoleListItemProps {
   isUpdateError: boolean;
   isDeleteError: boolean;
   setMode: (mode: 'add' | 'update' | 'preview') => void;
-  setCurrentData: (data: Role) => void;
+  setCurrentData: (data: User) => void;
   setOpen: (open: boolean) => void;
-  handleDeleteRole: (role: Role) => void; // Add handleDeleteRole prop
+  handleDeleteUser: (user: User) => void; // Add handleDeleteUser prop
 }
 
-const RoleListItem: React.FC<RoleListItemProps> = ({
+const UserListItem: React.FC<UserListItemProps> = ({
   one,
   index,
   currentData,
@@ -31,15 +30,8 @@ const RoleListItem: React.FC<RoleListItemProps> = ({
   setMode,
   setCurrentData,
   setOpen,
-  handleDeleteRole // Destructure handleDeleteRole
+  handleDeleteUser // Destructure handleDeleteUser
 }) => {
-  // const translatedOneRoleName = useMemo(() => {
-  //   if (!one.role_translations) {
-  //     return {};
-  //   }
-  //   return transformTranslations<RoleTranslation>(one.role_translations);
-  // }, [one.role_translations]);
-
   return (
     <ListItemComponent
       isLoading={
@@ -60,27 +52,28 @@ const RoleListItem: React.FC<RoleListItemProps> = ({
         setCurrentData(one);
         setOpen(true);
       }}
-      handleDelete={() => handleDeleteRole(one)} // Pass role to handleDeleteRole
+      handleDelete={() => handleDeleteUser(one)} // Pass user to handleDeleteUser
     >
       <div>
-        <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>
-          {one.name || one.title}
-        </div>
-        {one.description && (
-          <div style={{ fontSize: '0.8em', color: '#555', marginTop: '4px' }}>
-            Description: {one.description}
+        <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>{one.name}</div>
+        {one.email && (
+          <div style={{ fontSize: '0.8em', color: '#888' }}>
+            Email: {one.email}
           </div>
         )}
-        {one.permissions && (
-          <ToolTip text={one.permissions.join(', ')}>
-            <div style={{ fontSize: '0.8em', color: '#555' }}>
-              Permissions: {one.permissions.length}
-            </div>
-          </ToolTip>
+        {one.role && (
+          <div style={{ fontSize: '0.8em', color: '#555', marginTop: '4px' }}>
+            Role: {one.role}
+          </div>
+        )}
+        {one.status && (
+          <div style={{ fontSize: '0.8em', color: '#555' }}>
+            Status: {one.status}
+          </div>
         )}
       </div>
     </ListItemComponent>
   );
 };
 
-export default RoleListItem;
+export default UserListItem;

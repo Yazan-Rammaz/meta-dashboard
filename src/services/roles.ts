@@ -29,7 +29,7 @@ export const RolesApi = api.injectEndpoints({
     addRole: builder.mutation<Role, Partial<Role>>({
       query(body) {
         return {
-          url: `/roles/create`,
+          url: `/roles`,
           method: 'POST',
           body
         };

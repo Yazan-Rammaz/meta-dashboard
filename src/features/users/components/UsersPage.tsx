@@ -2,11 +2,11 @@ import ListComponent from '@/components/List';
 import ListItemComponent from '@/components/List/ListItem';
 import SuspenseLoader from '@/components/SuspenseLoader';
 import TableComponent, { TableColumn } from '@/components/TableComponent';
-import RoleForm from '@/features/roles/components/RoleForm';
-import RoleListItem from '@/features/roles/components/RoleListItem';
 import { TopNav } from '@/features/shared/components/DashboardShared';
-import { Role } from '@/models/roles';
-import HRMIcon from '@/ui/icons/HRM.svg';
+import UserForm from '@/features/users/components/UserForm';
+import UserListItem from '@/features/users/components/UserListItem';
+import { User } from '@/models/users';
+import UsersIcon from '@/ui/icons/user.svg';
 import ModalComponent from '@/ui/Modal';
 import ModalHeader from '@/ui/Modal/ModalHeader';
 import useTrans from '@/utils/translation_util';
@@ -23,77 +23,66 @@ import {
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
-  useAddRoleMutation,
-  useDeleteRoleMutation,
-  useGetRolesQuery,
-  useUpdateRoleMutation
-} from 'src/services/roles';
+  useAddUserMutation,
+  useDeleteUserMutation,
+  useGetUsersQuery,
+  useUpdateUserMutation
+} from 'src/services/users';
 
-const initialState: Role = {
+const initialState: User = {
   id: undefined,
-  permissions: [],
-  // role_translations: [],
-  title: ''
+  name: '',
+  email: '',
+  password: '',
+  role: 'admin',
+  status: 'active'
 };
 
-const roleTableColumns: TableColumn<Role>[] = [
-  { id: 'name', label: 'Role Name', minWidth: 170 },
-  { id: 'description', label: 'Description', minWidth: 200 },
-  {
-    id: 'permissions',
-    label: 'Permissions',
-    minWidth: 100,
-    format: (value: string[]) => value?.length.toString() || '0'
-  },
+const userTableColumns: TableColumn<User>[] = [
+  { id: 'name', label: 'User Name', minWidth: 170 },
+  { id: 'email', label: 'Email', minWidth: 100 },
+  { id: 'role', label: 'Role', minWidth: 170 },
+  { id: 'status', label: 'Status', minWidth: 100 },
   { id: 'actions', label: 'Actions', minWidth: 170, align: 'center' }
 ];
 
-function HRM() {
+function Users() {
   const trans = useTrans();
 
-  const { data: Roles, isLoading: isLoadingRoles } = useGetRolesQuery();
+  const { data: Users, isLoading: isLoadingUsers } = useGetUsersQuery();
   const [
-    addRole,
+    addUser,
     {
       isLoading: isAddLoading,
       isSuccess: isAddSuccess,
       isError: isAddError,
       reset: resetAdd
     }
-  ] = useAddRoleMutation();
+  ] = useAddUserMutation();
   const [
-    updateRole,
+    updateUser,
     {
       isLoading: isUpdateLoading,
       isSuccess: isUpdateSuccess,
       isError: isUpdateError,
       reset: resetUpdate
     }
-  ] = useUpdateRoleMutation();
+  ] = useUpdateUserMutation();
   const [
-    deleteRole,
+    deleteUser,
     {
       isLoading: isDeleteLoading,
       isSuccess: isDeleteSuccess,
       isError: isDeleteError,
       reset: resetDelete
     }
-  ] = useDeleteRoleMutation();
+  ] = useDeleteUserMutation();
   const [open, setOpen] = useState<boolean>(false);
   const [mode, setMode] = useState<'add' | 'update' | 'preview'>('preview');
-  const [currentData, setCurrentData] = useState<Role>(initialState);
+  const [currentData, setCurrentData] = useState<User>(initialState);
   const [viewMode, setViewMode] = useState<'list' | 'table'>('list'); // New state for view mode
   const [openConfirm, setOpenConfirm] = useState<boolean>(false); // State for confirmation modal
-  const [roleToDelete, setRoleToDelete] = useState<Role | null>(null); // State to store role to delete
-
-  // const translatedRoleName = useMemo(() => {
-  //   if (!currentData.role_translations) {
-  //     return {};
-  //   }
-  //   return transformTranslations<RoleTranslation>(
-  //     currentData.role_translations
-  //   );
-  // }, [currentData.role_translations]);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null); // State to store user to delete
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -111,40 +100,40 @@ function HRM() {
     isDeleteError
   ]);
 
-  const handleEditRole = (role: Role) => {
-    setCurrentData(role);
+  const handleEditUser = (user: User) => {
+    setCurrentData(user);
     setMode('update');
     setOpen(true);
   };
 
-  const handleDeleteRole = (role: Role) => {
-    setRoleToDelete(role);
+  const handleDeleteUser = (user: User) => {
+    setUserToDelete(user);
     setOpenConfirm(true);
   };
 
   const handleConfirmDelete = () => {
-    if (roleToDelete) {
-      deleteRole(roleToDelete);
+    if (userToDelete) {
+      deleteUser(userToDelete);
       setOpenConfirm(false);
       setOpen(false);
-      setRoleToDelete(null);
+      setUserToDelete(null);
     }
   };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
-    setRoleToDelete(null);
+    setUserToDelete(null);
   };
 
   return (
     <>
       <Helmet>
-        <title>{trans('Roles')}</title>
+        <title>{trans('Users')}</title>
       </Helmet>
       <TopNav
         add_permission=""
-        table_icon={HRMIcon}
-        table_name={trans('Roles')}
+        table_icon={UsersIcon}
+        table_name={trans('Users')}
         top_name_clk={() => {}}
         open_button_clk={() => {
           setCurrentData(initialState);
@@ -176,7 +165,8 @@ function HRM() {
             Table View
           </Button>
         </div>
-        {isLoadingRoles ? (
+
+        {isLoadingUsers ? (
           <SuspenseLoader />
         ) : viewMode === 'list' ? (
           <ListComponent>
@@ -189,13 +179,13 @@ function HRM() {
                   hasDelete={false}
                   hasAddChild={false}
                 >
-                  <>{currentData.description || currentData.title}</>
+                  <>{currentData.name}</>
                 </ListItemComponent>
               ) : (
                 <></>
               )}
-              {Roles?.map((one, index) => (
-                <RoleListItem
+              {Users?.map((one, index) => (
+                <UserListItem
                   key={one.id}
                   one={one}
                   index={index}
@@ -209,17 +199,17 @@ function HRM() {
                   setMode={setMode}
                   setCurrentData={setCurrentData}
                   setOpen={setOpen}
-                  handleDeleteRole={handleDeleteRole} // Pass handleDeleteRole
+                  handleDeleteUser={handleDeleteUser} // Pass handleDeleteUser
                 />
               ))}
             </>
           </ListComponent>
         ) : (
           <TableComponent
-            columns={roleTableColumns}
-            data={Roles || []}
-            onEdit={handleEditRole}
-            onDelete={handleDeleteRole}
+            columns={userTableColumns}
+            data={Users || []}
+            onEdit={handleEditUser}
+            onDelete={handleDeleteUser}
           />
         )}
         {
@@ -230,7 +220,7 @@ function HRM() {
                 update_permission={''}
                 delete_permission={''}
                 Delete={() => {
-                  handleDeleteRole(currentData); // Call handleDeleteRole to open confirmation modal
+                  handleDeleteUser(currentData); // Call handleDeleteUser to open confirmation modal
                 }}
                 close={() => {
                   setOpen(false);
@@ -238,8 +228,8 @@ function HRM() {
                 }}
                 title={
                   currentData?.name
-                    ? `${trans('Role')}: ${currentData.name}`
-                    : trans('Role')
+                    ? `${trans('User')}: ${currentData.name}`
+                    : trans('User')
                 }
                 mode={mode}
                 icon={<></>}
@@ -251,26 +241,26 @@ function HRM() {
                 addChild={() => {}}
                 clear_button_clk={() => {
                   if (mode === 'update') {
-                    if (Roles?.filter((one) => one.id === currentData.id)[0])
+                    if (Users?.filter((one) => one.id === currentData.id)[0])
                       setCurrentData(
-                        Roles?.filter((one) => one.id === currentData.id)[0]
+                        Users?.filter((one) => one.id === currentData.id)[0]
                       );
                   } else {
                     setCurrentData(initialState);
                   }
                 }}
               />
-              <RoleForm
+              <UserForm
                 currentData={currentData}
                 setCurrentData={setCurrentData}
                 mode={mode}
                 add_button_clk={() => {
-                  addRole(currentData);
+                  addUser(currentData);
                   setOpen(false);
                   setCurrentData(initialState);
                 }}
                 edit_button_clk={() => {
-                  updateRole(currentData);
+                  updateUser(currentData);
                   setOpen(false);
                   setMode('preview');
                 }}
@@ -292,7 +282,7 @@ function HRM() {
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               {trans(
-                `Are you sure you want to delete role "${roleToDelete?.name || roleToDelete?.title}"? This action cannot be undone.`
+                `Are you sure you want to delete user "${userToDelete?.name}"? This action cannot be undone.`
               )}
             </DialogContentText>
           </DialogContent>
@@ -310,4 +300,4 @@ function HRM() {
   );
 }
 
-export default HRM;
+export default Users;
