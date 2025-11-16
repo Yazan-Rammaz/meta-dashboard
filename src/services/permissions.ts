@@ -28,7 +28,7 @@ export const permissionsApi = api.injectEndpoints({
     }),
     getAllPermissions: builder.query<Array<Permission>, void>({
       query: () => ({
-        url: '/permissions/get_permissions',
+        url: '/permissions',
         method: 'GET'
       }),
       transformResponse: (response: GetPermissionsResponse) => {
@@ -37,7 +37,7 @@ export const permissionsApi = api.injectEndpoints({
     }),
     getAllPermissionsBySearch: builder.mutation<Array<Permission>, string>({
       query: (body) => ({
-        url: `/permissions/get_permissions?search_word=${body}`,
+        url: `/permissions?search_word=${body}`,
         method: 'GET'
       }),
       transformResponse: (response: GetPermissionsResponse) => {
