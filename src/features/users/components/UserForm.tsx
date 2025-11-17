@@ -1,4 +1,4 @@
-import { User } from '@/models/users';
+import { User } from '@/types/users';
 import ModalActionButton from '@/ui/Button/modalActionButton';
 import Input from '@/ui/Input';
 import ModalBody from '@/ui/Modal/ModalBody';

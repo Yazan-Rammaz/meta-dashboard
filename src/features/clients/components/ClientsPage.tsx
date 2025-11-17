@@ -1,33 +1,33 @@
-import ListComponent from '@/components/List';
-import ListItemComponent from '@/components/List/ListItem';
+import type { RootState } from '@/app/store';
 import SuspenseLoader from '@/components/SuspenseLoader';
-import TableComponent, { TableColumn } from '@/components/TableComponent';
 import ClientForm from '@/features/clients/components/ClientForm';
 import ClientListItem from '@/features/clients/components/ClientListItem';
 import { TopNav } from '@/features/shared/components/DashboardShared';
-import { Client } from '@/models/clients';
+import { Client } from '@/types/clients';
+import Badge from '@/ui/Badge';
 import ClientsIcon from '@/ui/icons/user.svg';
+import ListComponent from '@/ui/List';
+import ListItemComponent from '@/ui/List/ListItem';
 import ModalComponent from '@/ui/Modal';
+import ConfirmationModal from '@/ui/Modal/ConfirmationModal'; // Import ConfirmationModal
 import ModalHeader from '@/ui/Modal/ModalHeader';
+import TableComponent, { TableColumn } from '@/ui/Table/TableComponent';
+import ToolTip from '@/ui/Tooltip'; // Import ToolTip
+import { truncateMiddle } from '@/utils/string_utils'; // Import truncateMiddle
 import useTrans from '@/utils/translation_util';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle
-} from '@mui/material';
+import KeyIcon from '@mui/icons-material/Key';
+import { Button } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useSelector } from 'react-redux';
 import {
   useAddClientMutation,
   useDeleteClientMutation,
   useGetClientsQuery,
   useUpdateClientMutation
 } from 'src/services/clients';
+import { PermissionKey } from 'src/types/permissions'; // Import PermissionKey enum
 
 const initialState: Client = {
   id: undefined,
@@ -46,14 +46,61 @@ const clientTableColumns: TableColumn<Client>[] = [
   { id: 'name', label: 'Client Name', minWidth: 170 },
   { id: 'display_phone_number', label: 'Phone Number', minWidth: 100 },
   { id: 'whatsapp_business_id', label: 'WhatsApp Business ID', minWidth: 170 },
-  { id: 'webhook_url', label: 'Webhook URL', minWidth: 170 },
+  {
+    id: 'webhook_url',
+    label: 'Webhook URL',
+    minWidth: 170,
+    format: (value: string | null | undefined) =>
+      value ? (
+        <ToolTip text={value}>
+          <span>{truncateMiddle(value, 70)}</span>
+        </ToolTip>
+      ) : (
+        ''
+      )
+  },
   {
     id: 'rate_limit_per_minute',
     label: 'Rate Limit/Minute',
     minWidth: 100,
     align: 'right'
   },
-  { id: 'status', label: 'Status', minWidth: 100 },
+  {
+    id: 'status',
+    label: 'Status',
+    minWidth: 100,
+    format: (value: string) =>
+      value === 'active' ? (
+        <Badge color="success" label="Active" />
+      ) : (
+        <Badge color="error" label="Inactive" />
+      )
+  },
+  {
+    id: 'api_keys',
+    label: 'API Keys',
+    minWidth: 120,
+    align: 'center',
+    format: (value: any, row: Client) => {
+      const router = useRouter();
+      const handleViewApiKeys = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (row.id) {
+          router.push(`/api-keys/${row.id}`);
+        }
+      };
+      return (
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<KeyIcon />}
+          onClick={handleViewApiKeys}
+        >
+          View API Keys
+        </Button>
+      );
+    }
+  },
   { id: 'actions', label: 'Actions', minWidth: 170, align: 'center' }
 ];
 
@@ -91,9 +138,10 @@ function Clients() {
   const [open, setOpen] = useState<boolean>(false);
   const [mode, setMode] = useState<'add' | 'update' | 'preview'>('preview');
   const [currentData, setCurrentData] = useState<Client>(initialState);
-  const [viewMode, setViewMode] = useState<'list' | 'table'>('list'); // New state for view mode
   const [openConfirm, setOpenConfirm] = useState<boolean>(false); // State for confirmation modal
   const [clientToDelete, setClientToDelete] = useState<Client | null>(null); // State to store client to delete
+
+  const viewMode = useSelector((state: RootState) => state.viewMode.mode);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -142,16 +190,15 @@ function Clients() {
         <title>{trans('Clients')}</title>
       </Helmet>
       <TopNav
-        add_permission=""
+        add_permission={PermissionKey.CLIENTS_CREATE}
         table_icon={ClientsIcon}
         table_name={trans('Clients')}
         top_name_clk={() => {}}
         open_button_clk={() => {
-          setCurrentData(initialState);
+          setCurrentData({ ...initialState });
           setMode('add');
           setOpen(true);
         }}
-        haveView={false}
       />
       {isAddLoading || isUpdateLoading || isDeleteLoading ? (
         <SuspenseLoader />
@@ -159,24 +206,6 @@ function Clients() {
         <></>
       )}
       <div style={{ padding: '70px 20px 20px 20px' }}>
-        <div style={{ marginBottom: '20px', textAlign: 'right' }}>
-          <Button
-            onClick={() => setViewMode('list')}
-            variant={viewMode === 'list' ? 'contained' : 'outlined'}
-            startIcon={<ViewListIcon />}
-          >
-            List View
-          </Button>
-          <Button
-            onClick={() => setViewMode('table')}
-            variant={viewMode === 'table' ? 'contained' : 'outlined'}
-            startIcon={<ViewModuleIcon />}
-            style={{ marginLeft: '10px' }}
-          >
-            Table View
-          </Button>
-        </div>
-
         {isLoadingClients ? (
           <SuspenseLoader />
         ) : viewMode === 'list' ? (
@@ -211,6 +240,8 @@ function Clients() {
                   setCurrentData={setCurrentData}
                   setOpen={setOpen}
                   handleDeleteClient={handleDeleteClient} // Pass handleDeleteClient
+                  edit_permission={PermissionKey.CLIENTS_UPDATE}
+                  delete_permission={PermissionKey.CLIENTS_DELETE}
                 />
               ))}
             </>
@@ -221,15 +252,18 @@ function Clients() {
             data={Clients || []}
             onEdit={handleEditClient}
             onDelete={handleDeleteClient}
+            edit_permission={PermissionKey.CLIENTS_UPDATE}
+            delete_permission={PermissionKey.CLIENTS_DELETE}
+            deleteText="Delete"
           />
         )}
         {
           <ModalComponent open={open}>
             <>
               <ModalHeader
-                add_permission=""
-                update_permission={''}
-                delete_permission={''}
+                add_permission={PermissionKey.CLIENTS_CREATE}
+                update_permission={PermissionKey.CLIENTS_UPDATE}
+                delete_permission={PermissionKey.CLIENTS_DELETE}
                 Delete={() => {
                   handleDeleteClient(currentData); // Call handleDeleteClient to open confirmation modal
                 }}
@@ -280,32 +314,15 @@ function Clients() {
           </ModalComponent>
         }
 
-        {/* Confirmation Modal */}
-        <Dialog
+        <ConfirmationModal
           open={openConfirm}
           onClose={handleCloseConfirm}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {trans('Confirm Delete')}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {trans(
-                `Are you sure you want to delete client "${clientToDelete?.name}"? This action cannot be undone.`
-              )}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseConfirm} color="primary">
-              {trans('Cancel')}
-            </Button>
-            <Button onClick={handleConfirmDelete} color="primary" autoFocus>
-              {trans('Delete')}
-            </Button>
-          </DialogActions>
-        </Dialog>
+          onConfirm={handleConfirmDelete}
+          title={trans('Confirm Delete')}
+          message={trans(
+            `Are you sure you want to delete client "${clientToDelete?.name}"? This action cannot be undone.`
+          )}
+        />
       </div>
     </>
   );

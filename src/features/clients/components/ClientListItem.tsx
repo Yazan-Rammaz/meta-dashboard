@@ -1,6 +1,11 @@
-import ListItemComponent from '@/components/List/ListItem';
-import { Client } from '@/models/clients';
+import { Client } from '@/types/clients';
+import Badge from '@/ui/Badge';
+import ListItemComponent from '@/ui/List/ListItem';
 import ToolTip from '@/ui/Tooltip';
+import KeyIcon from '@mui/icons-material/Key';
+import { Button } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
 interface ClientListItemProps {
   one: Client;
@@ -16,6 +21,8 @@ interface ClientListItemProps {
   setCurrentData: (data: Client) => void;
   setOpen: (open: boolean) => void;
   handleDeleteClient: (client: Client) => void; // Add handleDeleteClient prop
+  edit_permission: string; // Add edit_permission
+  delete_permission: string; // Add delete_permission
 }
 
 const ClientListItem: React.FC<ClientListItemProps> = ({
@@ -31,8 +38,19 @@ const ClientListItem: React.FC<ClientListItemProps> = ({
   setMode,
   setCurrentData,
   setOpen,
-  handleDeleteClient // Destructure handleDeleteClient
+  handleDeleteClient, // Destructure handleDeleteClient
+  edit_permission, // Destructure edit_permission
+  delete_permission // Destructure delete_permission
 }) => {
+  const router = useRouter();
+
+  const handleViewApiKeys = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Stop event propagation
+    if (one.id) {
+      router.push(`/api-keys/${one.id}`);
+    }
+  };
+
   return (
     <ListItemComponent
       isLoading={
@@ -54,6 +72,8 @@ const ClientListItem: React.FC<ClientListItemProps> = ({
         setOpen(true);
       }}
       handleDelete={() => handleDeleteClient(one)} // Pass client to handleDeleteClient
+      edit_permission={edit_permission}
+      delete_permission={delete_permission}
     >
       <div>
         <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>{one.name}</div>
@@ -81,8 +101,24 @@ const ClientListItem: React.FC<ClientListItemProps> = ({
         )}
         {one.status && (
           <div style={{ fontSize: '0.8em', color: '#555' }}>
-            Status: {one.status}
+            Status:{' '}
+            {one.status === 'active' ? (
+              <Badge color="success" label="Active" />
+            ) : (
+              <Badge color="error" label="Inactive" />
+            )}
           </div>
+        )}
+        {one.id && (
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<KeyIcon />}
+            onClick={handleViewApiKeys}
+            style={{ marginTop: '10px' }}
+          >
+            View API Keys
+          </Button>
         )}
       </div>
     </ListItemComponent>

@@ -1,8 +1,8 @@
-import { styled } from "@mui/material";
-import { ReactElement } from "react";
+import { styled } from '@mui/material';
+import { ReactNode } from 'react';
 
-const ModalBodyContainer = styled("div")(
-    () => `
+const ModalBodyContainer = styled('div')(
+  () => `
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -12,10 +12,8 @@ const ModalBodyContainer = styled("div")(
 `
 );
 interface ModalProps {
-    children?: ReactElement
+  children?: ReactNode;
 }
 export default function ModalBody({ children }: ModalProps) {
-    return (<ModalBodyContainer>
-        {children}
-    </ModalBodyContainer>)
+  return <ModalBodyContainer>{children}</ModalBodyContainer>;
 }

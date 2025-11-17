@@ -5,7 +5,6 @@ import DocsIcon from '@/ui/icons/Docs';
 import HomeIcon from '@/ui/icons/home.svg';
 import HRMIcon from '@/ui/icons/HRM.svg';
 import InfoIcon from '@/ui/icons/Info';
-import LinksIcon from '@/ui/icons/Links';
 import UsersIcon, { default as ClientsIcon } from '@/ui/icons/user.svg'; // Import the new UsersIcon
 import CanCall from '@/utils/ability';
 import useTrans from '@/utils/translation_util';
@@ -359,13 +358,6 @@ function SidebarMenu() {
       label: 'Roles',
       icon: HRMIcon,
       permission: '' // PAGE_PERMISSIONS.ROLES
-    },
-    {
-      link: '/api-keys',
-      id: 3,
-      label: 'API Keys',
-      icon: LinksIcon,
-      permission: PAGE_PERMISSIONS.API_KEYS
     },
     {
       link: '/clients',

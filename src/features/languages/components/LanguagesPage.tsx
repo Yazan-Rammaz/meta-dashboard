@@ -1,11 +1,11 @@
-import ListComponent from '@/components/List';
-import ListItemComponent from '@/components/List/ListItem';
 import SuspenseLoader from '@/components/SuspenseLoader';
 import LanguageModal from '@/features/languages/components/LanguageModal';
 import { TopNav } from '@/features/shared/components/DashboardShared';
 import { Language } from '@/models/languages';
 import EmptyIcon from '@/ui/icons/emptyIcon.svg';
 import LanguagesIcon from '@/ui/icons/languages.svg';
+import ListComponent from '@/ui/List';
+import ListItemComponent from '@/ui/List/ListItem';
 import ModalComponent from '@/ui/Modal';
 import ModalHeader from '@/ui/Modal/ModalHeader';
 import ShowTrans, { transformTranslations } from '@/utils/showTrans';

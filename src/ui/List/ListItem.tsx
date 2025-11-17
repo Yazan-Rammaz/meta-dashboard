@@ -1,6 +1,7 @@
 import Add from '@/ui/icons/add.js';
 import Closed from '@/ui/icons/closed.svg';
 import Delete from '@/ui/icons/delete.js';
+import Edit from '@/ui/icons/edit.svg';
 import Opened from '@/ui/icons/opened.svg';
 import Spinner from '@/ui/Spinner';
 import SpinnerError from '@/ui/Spinner/spinner_error';
@@ -110,13 +111,18 @@ interface ListItemProps {
   hasAddChild?: boolean;
   addChild?: () => void;
   hasDelete?: boolean;
-  handleDelete?: () => void; // Changed from deleteItem to handleDelete
+  handleDelete?: ((item: any) => void) | undefined; // Changed from deleteItem to handleDelete
+  item?: any;
   forceOpen?: boolean;
   add_permission?: string;
   delete_permission?: string;
   isLoading?: boolean;
   isSuccess?: boolean;
   isError?: boolean;
+  deleteText?: string; // Add deleteText prop
+  edit_permission?: string;
+  onEdit?: () => void;
+  onDelete?: () => void; // Add onDelete prop
 }
 
 export default function ListItemComponent({
@@ -134,7 +140,11 @@ export default function ListItemComponent({
   delete_permission,
   isLoading,
   isError,
-  isSuccess
+  isSuccess,
+  deleteText = 'Delete',
+  onEdit,
+  edit_permission,
+  onDelete // Destructure onDelete
 }: ListItemProps) {
   const trans = useTrans();
 
@@ -232,6 +242,19 @@ export default function ListItemComponent({
         )}
         {optionsOpen ? (
           <Options>
+            {onEdit && (
+              <CanCall permission={edit_permission}>
+                <ToolTip text={trans('Edit')}>
+                  <Option
+                    onClick={() => {
+                      if (onEdit) onEdit();
+                    }}
+                  >
+                    <Edit />
+                  </Option>
+                </ToolTip>
+              </CanCall>
+            )}
             {hasAddChild ? (
               <CanCall permission={add_permission}>
                 <ToolTip text={trans('Add Sub')}>
@@ -249,10 +272,10 @@ export default function ListItemComponent({
             )}
             {hasDelete ? (
               <CanCall permission={delete_permission}>
-                <ToolTip text={trans('Delete')}>
+                <ToolTip text={trans(deleteText)}>
                   <Option
                     onClick={() => {
-                      if (handleDelete) handleDelete(); // Changed from deleteItem to handleDelete
+                      if (onDelete) onDelete(); // Use onDelete
                     }}
                   >
                     <Delete />

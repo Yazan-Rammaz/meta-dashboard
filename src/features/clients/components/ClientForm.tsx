@@ -1,4 +1,4 @@
-import { Client } from '@/models/clients';
+import { Client } from '@/types/clients';
 import ModalActionButton from '@/ui/Button/modalActionButton';
 import Input from '@/ui/Input';
 import ModalBody from '@/ui/Modal/ModalBody';

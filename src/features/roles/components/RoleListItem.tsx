@@ -1,5 +1,5 @@
-import ListItemComponent from '@/components/List/ListItem';
-import { Role } from '@/models/roles';
+import { Role } from '@/types/roles';
+import ListItemComponent from '@/ui/List/ListItem';
 import ToolTip from '@/ui/Tooltip';
 
 interface RoleListItemProps {
@@ -15,7 +15,9 @@ interface RoleListItemProps {
   setMode: (mode: 'add' | 'update' | 'preview') => void;
   setCurrentData: (data: Role) => void;
   setOpen: (open: boolean) => void;
-  handleDeleteRole: (role: Role) => void; // Add handleDeleteRole prop
+  handleDeleteClick: (role: Role) => void; // Change prop name to handleDeleteClick
+  edit_permission: string; // Add edit_permission
+  delete_permission: string; // Add delete_permission
 }
 
 const RoleListItem: React.FC<RoleListItemProps> = ({
@@ -31,7 +33,9 @@ const RoleListItem: React.FC<RoleListItemProps> = ({
   setMode,
   setCurrentData,
   setOpen,
-  handleDeleteRole // Destructure handleDeleteRole
+  handleDeleteClick, // Destructure handleDeleteClick
+  edit_permission, // Destructure edit_permission
+  delete_permission // Destructure delete_permission
 }) => {
   // const translatedOneRoleName = useMemo(() => {
   //   if (!one.role_translations) {
@@ -60,7 +64,9 @@ const RoleListItem: React.FC<RoleListItemProps> = ({
         setCurrentData(one);
         setOpen(true);
       }}
-      handleDelete={() => handleDeleteRole(one)} // Pass role to handleDeleteRole
+      handleDelete={() => handleDeleteClick(one)} // Pass role to handleDeleteClick
+      edit_permission={edit_permission}
+      delete_permission={delete_permission}
     >
       <div>
         <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>

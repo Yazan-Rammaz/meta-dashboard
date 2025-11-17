@@ -1,33 +1,27 @@
-import ListComponent from '@/components/List';
-import ListItemComponent from '@/components/List/ListItem';
+import type { RootState } from '@/app/store';
 import SuspenseLoader from '@/components/SuspenseLoader';
-import TableComponent, { TableColumn } from '@/components/TableComponent';
 import RoleForm from '@/features/roles/components/RoleForm';
 import RoleListItem from '@/features/roles/components/RoleListItem';
 import { TopNav } from '@/features/shared/components/DashboardShared';
-import { Role } from '@/models/roles';
-import HRMIcon from '@/ui/icons/HRM.svg';
+import { Role } from '@/types/roles';
+import RolesIcon from '@/ui/icons/RolesIcon.js'; // Corrected import for RolesIcon
+import ListComponent from '@/ui/List';
+import ListItemComponent from '@/ui/List/ListItem';
 import ModalComponent from '@/ui/Modal';
+import ConfirmationModal from '@/ui/Modal/ConfirmationModal'; // Import ConfirmationModal
 import ModalHeader from '@/ui/Modal/ModalHeader';
+import TableComponent, { TableColumn } from '@/ui/Table/TableComponent';
 import useTrans from '@/utils/translation_util';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle
-} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useSelector } from 'react-redux';
 import {
   useAddRoleMutation,
   useDeleteRoleMutation,
   useGetRolesQuery,
   useUpdateRoleMutation
 } from 'src/services/roles';
+import { PermissionKey } from 'src/types/permissions'; // Import PermissionKey enum
 
 const initialState: Role = {
   id: undefined,
@@ -82,9 +76,10 @@ function HRM() {
   const [open, setOpen] = useState<boolean>(false);
   const [mode, setMode] = useState<'add' | 'update' | 'preview'>('preview');
   const [currentData, setCurrentData] = useState<Role>(initialState);
-  const [viewMode, setViewMode] = useState<'list' | 'table'>('list'); // New state for view mode
   const [openConfirm, setOpenConfirm] = useState<boolean>(false); // State for confirmation modal
   const [roleToDelete, setRoleToDelete] = useState<Role | null>(null); // State to store role to delete
+
+  const viewMode = useSelector((state: RootState) => state.viewMode.mode);
 
   // const translatedRoleName = useMemo(() => {
   //   if (!currentData.role_translations) {
@@ -142,16 +137,15 @@ function HRM() {
         <title>{trans('Roles')}</title>
       </Helmet>
       <TopNav
-        add_permission=""
-        table_icon={HRMIcon}
+        add_permission={PermissionKey.ROLES_CREATE}
+        table_icon={RolesIcon}
         table_name={trans('Roles')}
         top_name_clk={() => {}}
         open_button_clk={() => {
-          setCurrentData(initialState);
+          setCurrentData({ ...initialState });
           setMode('add');
           setOpen(true);
         }}
-        haveView={false}
       />
       {isAddLoading || isUpdateLoading || isDeleteLoading ? (
         <SuspenseLoader />
@@ -159,23 +153,6 @@ function HRM() {
         <></>
       )}
       <div style={{ padding: '70px 20px 20px 20px' }}>
-        <div style={{ marginBottom: '20px', textAlign: 'right' }}>
-          <Button
-            onClick={() => setViewMode('list')}
-            variant={viewMode === 'list' ? 'contained' : 'outlined'}
-            startIcon={<ViewListIcon />}
-          >
-            List View
-          </Button>
-          <Button
-            onClick={() => setViewMode('table')}
-            variant={viewMode === 'table' ? 'contained' : 'outlined'}
-            startIcon={<ViewModuleIcon />}
-            style={{ marginLeft: '10px' }}
-          >
-            Table View
-          </Button>
-        </div>
         {isLoadingRoles ? (
           <SuspenseLoader />
         ) : viewMode === 'list' ? (
@@ -189,12 +166,12 @@ function HRM() {
                   hasDelete={false}
                   hasAddChild={false}
                 >
-                  <>{currentData.description || currentData.title}</>
+                  <>{currentData.name}</>
                 </ListItemComponent>
               ) : (
                 <></>
               )}
-              {Roles?.map((one, index) => (
+              {Roles?.map((one, index: number) => (
                 <RoleListItem
                   key={one.id}
                   one={one}
@@ -209,7 +186,9 @@ function HRM() {
                   setMode={setMode}
                   setCurrentData={setCurrentData}
                   setOpen={setOpen}
-                  handleDeleteRole={handleDeleteRole} // Pass handleDeleteRole
+                  handleDeleteClick={handleDeleteRole} // Pass handleDeleteRole to handleDeleteClick prop
+                  edit_permission={PermissionKey.ROLES_UPDATE}
+                  delete_permission={PermissionKey.ROLES_DELETE}
                 />
               ))}
             </>
@@ -220,15 +199,18 @@ function HRM() {
             data={Roles || []}
             onEdit={handleEditRole}
             onDelete={handleDeleteRole}
+            edit_permission={PermissionKey.ROLES_UPDATE}
+            delete_permission={PermissionKey.ROLES_DELETE}
+            deleteText="Delete"
           />
         )}
         {
           <ModalComponent open={open}>
             <>
               <ModalHeader
-                add_permission=""
-                update_permission={''}
-                delete_permission={''}
+                add_permission={PermissionKey.ROLES_CREATE}
+                update_permission={PermissionKey.ROLES_UPDATE}
+                delete_permission={PermissionKey.ROLES_DELETE}
                 Delete={() => {
                   handleDeleteRole(currentData); // Call handleDeleteRole to open confirmation modal
                 }}
@@ -251,9 +233,13 @@ function HRM() {
                 addChild={() => {}}
                 clear_button_clk={() => {
                   if (mode === 'update') {
-                    if (Roles?.filter((one) => one.id === currentData.id)[0])
+                    if (
+                      Roles?.filter((one: Role) => one.id === currentData.id)[0]
+                    )
                       setCurrentData(
-                        Roles?.filter((one) => one.id === currentData.id)[0]
+                        Roles?.filter(
+                          (one: Role) => one.id === currentData.id
+                        )[0]
                       );
                   } else {
                     setCurrentData(initialState);
@@ -279,32 +265,15 @@ function HRM() {
           </ModalComponent>
         }
 
-        {/* Confirmation Modal */}
-        <Dialog
+        <ConfirmationModal
           open={openConfirm}
           onClose={handleCloseConfirm}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {trans('Confirm Delete')}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {trans(
-                `Are you sure you want to delete role "${roleToDelete?.name || roleToDelete?.title}"? This action cannot be undone.`
-              )}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseConfirm} color="primary">
-              {trans('Cancel')}
-            </Button>
-            <Button onClick={handleConfirmDelete} color="primary" autoFocus>
-              {trans('Delete')}
-            </Button>
-          </DialogActions>
-        </Dialog>
+          onConfirm={handleConfirmDelete}
+          title={trans('Confirm Delete')}
+          message={trans(
+            `Are you sure you want to delete role "${roleToDelete?.name || roleToDelete?.title}"? This action cannot be undone.`
+          )}
+        />
       </div>
     </>
   );

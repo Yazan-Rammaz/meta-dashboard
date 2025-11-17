@@ -13,6 +13,7 @@ export const enum PermissionKey {
   API_KEYS_DELETE = 'api_keys.delete',
   API_KEYS_READ = 'api_keys.read',
   API_KEYS_UPDATE = 'api_keys.update',
+  API_KEYS_REVOKE = 'api_keys.delete',
 
   // Clients Permissions
   CLIENTS_CREATE = 'clients.create',

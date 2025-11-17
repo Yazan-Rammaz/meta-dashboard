@@ -1,11 +1,12 @@
-import {
-  configureStore,
-  Middleware,
-  isRejectedWithValue
-} from '@reduxjs/toolkit';
-import { api } from '@/services/auth';
 import authReducer, { setErrorMessage } from '@/features/auth/authSlice';
 import uploadReducer from '@/features/upload/uploadSlice';
+import viewModeReducer from '@/features/view_mode/viewModeSlice';
+import { api } from '@/services/auth';
+import {
+  configureStore,
+  isRejectedWithValue,
+  Middleware
+} from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query/react';
 
 export const rtkQueryErrorLogger: Middleware = () => (next) => (action) => {
@@ -25,10 +26,11 @@ export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
     auth: authReducer,
-    upload: uploadReducer
+    upload: uploadReducer,
+    viewMode: viewModeReducer
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware).concat(rtkQueryErrorLogger)
+    getDefaultMiddleware().concat(api.middleware, rtkQueryErrorLogger)
 });
 
 export type RootState = ReturnType<typeof store.getState>;

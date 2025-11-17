@@ -1,8 +1,8 @@
-import { Role } from '@/models/roles';
 import {
   useGetAllPermissionsBySearchMutation,
   useGetpermissionsQuery
 } from '@/services/permissions';
+import { Role } from '@/types/roles';
 import ModalActionButton from '@/ui/Button/modalActionButton';
 import Input from '@/ui/Input';
 import ModalBody from '@/ui/Modal/ModalBody';

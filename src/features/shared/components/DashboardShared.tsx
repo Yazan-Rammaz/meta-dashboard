@@ -1,18 +1,17 @@
-import SuspenseLoader from '@/components/SuspenseLoader';
+import type { RootState } from '@/app/store';
 import { SidebarContext } from '@/contexts/SidebarContext';
 import { TranslationContext } from '@/contexts/translationContext';
+import { setViewMode } from '@/features/view_mode/viewModeSlice';
 import { useGetlanguagesQuery } from '@/services/languages';
-import Application from '@/ui/icons/Application';
-import Filter from '@/ui/icons/Filter';
 import FollowerIcon from '@/ui/icons/FollowerIcon';
-import Search from '@/ui/icons/search';
-import Sort from '@/ui/icons/Sort';
-import Translated from '@/ui/icons/Translated';
 import ToolTip from '@/ui/Tooltip';
 import CanCall from '@/utils/ability';
 import useTrans from '@/utils/translation_util';
+import ViewListIcon from '@mui/icons-material/ViewList'; // Import ViewListIcon
+import ViewModuleIcon from '@mui/icons-material/ViewModule'; // Import ViewModuleIcon
 import Image from 'next/image';
 import { useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface FollowerItem {
   id: number;
@@ -25,8 +24,6 @@ interface Props {
   follower?: Array<FollowerItem>;
   followerclk?: (index: number, name: string, id: number) => void;
   open_button_clk?: () => void;
-  haveView?: boolean;
-  viewData?: () => JSX.Element | null;
   add_permission?: string;
 }
 export const TopNav = ({
@@ -36,9 +33,7 @@ export const TopNav = ({
   follower,
   followerclk,
   add_permission,
-  open_button_clk,
-  haveView,
-  viewData
+  open_button_clk
 }: Props) => {
   const { data: languages, isLoading: isLoadingLanguages } =
     useGetlanguagesQuery(undefined, {
@@ -46,6 +41,13 @@ export const TopNav = ({
     });
   const { language_code, changeLanguage } = useContext(TranslationContext);
   const { sidebarToggle } = useContext(SidebarContext);
+
+  const dispatch = useDispatch();
+  const viewMode = useSelector((state: RootState) => state.viewMode.mode);
+
+  const handleSetViewMode = (mode: 'list' | 'table') => {
+    dispatch(setViewMode(mode));
+  };
 
   return (
     <div
@@ -113,45 +115,57 @@ export const TopNav = ({
       </div>
 
       <div className="top-options">
+        {/* <div className="top-option">
+            <span>
+              <Search />
+            </span>
+          </div> */}
+        {/* <div className="top-option langs">
+            <span>
+              <Translated />
+            </span>
+            <div className="lang-items">
+              {isLoadingLanguages ? (
+                <SuspenseLoader />
+              ) : (
+                languages?.map(
+                  (language: { language_code: string }, index: number) => (
+                    <div
+                      key={index}
+                      onClick={() => changeLanguage(language.language_code)}
+                      className={`lang-item  ${
+                        language_code?.toLowerCase() ===
+                        language.language_code?.toLowerCase()
+                          ? 'selected-lang'
+                          : ''
+                      }`}
+                    >
+                      {language.language_code.toUpperCase()}
+                    </div>
+                  )
+                )
+              )}
+            </div>
+          </div> */}
         <div className="top-option">
-          <span>
-            <Search />
-          </span>
-        </div>
-        <div className="top-option langs">
-          <span>
-            <Translated />
-          </span>
-          <div className="lang-items">
-            {isLoadingLanguages ? (
-              <SuspenseLoader />
-            ) : (
-              languages?.map((language, index) => (
-                <div
-                  key={index}
-                  onClick={() => changeLanguage(language.language_code)}
-                  className={`lang-item  ${language_code?.toLowerCase() === language.language_code?.toLowerCase() ? 'selected-lang' : ''}`}
-                >
-                  {language.language_code.toUpperCase()}
-                </div>
-              ))
-            )}
-          </div>
+          <ToolTip text="List View">
+            <span
+              onClick={() => handleSetViewMode('list')}
+              style={{ color: viewMode === 'list' ? '#555' : '#8e8e8e' }}
+            >
+              <ViewListIcon />
+            </span>
+          </ToolTip>
         </div>
         <div className="top-option">
-          <span>
-            <Sort />
-          </span>
-        </div>
-        <div className="top-option">
-          <span>
-            <Filter />
-          </span>
-        </div>
-        <div className="top-option">
-          <span>
-            <Application />
-          </span>
+          <ToolTip text="Table View">
+            <span
+              onClick={() => handleSetViewMode('table')}
+              style={{ color: viewMode === 'table' ? '#555' : '#8e8e8e' }}
+            >
+              <ViewModuleIcon />
+            </span>
+          </ToolTip>
         </div>
         <svg
           className={'lines'}
@@ -173,7 +187,6 @@ export const TopNav = ({
         </svg>
       </div>
       <div className={`lang-add currency-add`}>
-        {haveView && viewData ? viewData() : null}
         <svg
           className={'addlines'}
           xmlns="http://www.w3.org/2000/svg"

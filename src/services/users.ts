@@ -1,5 +1,5 @@
-import { User } from '@/models/users';
 import { api } from '@/services/auth';
+import { User } from '@/types/users';
 
 export interface GetUsersResponse {
   data: User[];

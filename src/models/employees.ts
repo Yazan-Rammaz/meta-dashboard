@@ -1,4 +1,4 @@
-import { Role } from '@/models/roles';
+import { Role } from '@/types/roles';
 
 export interface Employee {
   user_id?: number;

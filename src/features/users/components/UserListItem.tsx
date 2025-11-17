@@ -1,5 +1,6 @@
-import ListItemComponent from '@/components/List/ListItem';
-import { User } from '@/models/users';
+import { User } from '@/types/users';
+import Badge from '@/ui/Badge';
+import ListItemComponent from '@/ui/List/ListItem';
 
 interface UserListItemProps {
   one: User;
@@ -14,7 +15,9 @@ interface UserListItemProps {
   setMode: (mode: 'add' | 'update' | 'preview') => void;
   setCurrentData: (data: User) => void;
   setOpen: (open: boolean) => void;
-  handleDeleteUser: (user: User) => void; // Add handleDeleteUser prop
+  handleDeleteClick: (user: User) => void; // Change prop name to handleDeleteClick
+  edit_permission: string; // Add edit_permission
+  delete_permission: string; // Add delete_permission
 }
 
 const UserListItem: React.FC<UserListItemProps> = ({
@@ -30,7 +33,9 @@ const UserListItem: React.FC<UserListItemProps> = ({
   setMode,
   setCurrentData,
   setOpen,
-  handleDeleteUser // Destructure handleDeleteUser
+  handleDeleteClick, // Destructure handleDeleteClick
+  edit_permission, // Destructure edit_permission
+  delete_permission // Destructure delete_permission
 }) => {
   return (
     <ListItemComponent
@@ -52,7 +57,9 @@ const UserListItem: React.FC<UserListItemProps> = ({
         setCurrentData(one);
         setOpen(true);
       }}
-      handleDelete={() => handleDeleteUser(one)} // Pass user to handleDeleteUser
+      handleDelete={() => handleDeleteClick(one)} // Pass user to handleDeleteClick
+      edit_permission={edit_permission}
+      delete_permission={delete_permission}
     >
       <div>
         <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>{one.name}</div>
@@ -68,7 +75,12 @@ const UserListItem: React.FC<UserListItemProps> = ({
         )}
         {one.status && (
           <div style={{ fontSize: '0.8em', color: '#555' }}>
-            Status: {one.status}
+            Status:{' '}
+            {one.status === 'active' ? (
+              <Badge color="success" label="Active" />
+            ) : (
+              <Badge color="error" label="Inactive" />
+            )}
           </div>
         )}
       </div>

@@ -1,15 +1,15 @@
-import { styled } from '@mui/material';
-import { ReactElement } from 'react';
 import AddIcon from '@/ui/Modal/icons/addIcon';
-import ToolTip from '@/ui/Tooltip';
-import useTrans from '@/utils/translation_util';
 import Close from '@/ui/Modal/icons/close';
-import UploadExcel from '@/ui/Modal/icons/uploadExcel';
-import ResetIcon from '@/ui/Modal/icons/resetIcon';
 import DeleteIcon from '@/ui/Modal/icons/deleteIcon';
 import EditIcon from '@/ui/Modal/icons/editIcon';
+import ResetIcon from '@/ui/Modal/icons/resetIcon';
 import TopClearIcon from '@/ui/Modal/icons/topClearIcon';
+import UploadExcel from '@/ui/Modal/icons/uploadExcel';
+import ToolTip from '@/ui/Tooltip';
 import CanCall from '@/utils/ability';
+import useTrans from '@/utils/translation_util';
+import { styled } from '@mui/material';
+import { ReactElement } from 'react';
 
 const HeaderContainer = styled('div')(
   () => `
@@ -143,12 +143,14 @@ interface ModalProps {
   close: () => void;
   edit?: () => void;
   Delete?: () => void;
+  Revoke?: () => void;
   addChild?: () => void;
   mode: 'add' | 'update' | 'preview';
   hasAddSub?: boolean;
   navData?: string;
   clear_button_clk: () => void;
   add_permission?: string;
+  revoke_permission?: string;
   update_permission?: string;
   delete_permission?: string;
 }
@@ -158,12 +160,14 @@ export default function ModalHeader({
   close,
   edit,
   Delete = () => {},
+  Revoke = () => {},
   mode,
   navData,
   clear_button_clk,
   addChild,
   hasAddSub,
   add_permission,
+  revoke_permission,
   delete_permission,
   update_permission
 }: ModalProps) {
@@ -198,7 +202,16 @@ export default function ModalHeader({
               <ToolTip text={useTrans()('Delete')}>
                 <IconContainer
                   onClick={() => {
-                    clear_button_clk();
+                    Delete();
+                  }}
+                >
+                  <DeleteIcon />
+                </IconContainer>
+              </ToolTip>
+              <ToolTip text={useTrans()('Revoke')}>
+                <IconContainer
+                  onClick={() => {
+                    Revoke();
                   }}
                 >
                   <DeleteIcon />
@@ -289,6 +302,17 @@ export default function ModalHeader({
                     <ModalCloseContainer
                       onClick={() => {
                         if (Delete) Delete();
+                      }}
+                    >
+                      <TopClearIcon />
+                    </ModalCloseContainer>
+                  </ToolTip>
+                </CanCall>
+                <CanCall permission={revoke_permission}>
+                  <ToolTip text={useTrans()('Revoke')}>
+                    <ModalCloseContainer
+                      onClick={() => {
+                        if (Revoke) Revoke();
                       }}
                     >
                       <TopClearIcon />

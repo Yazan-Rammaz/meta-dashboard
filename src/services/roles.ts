@@ -1,5 +1,5 @@
-import { Role } from '@/models/roles';
 import { api } from '@/services/auth';
+import { Role } from '@/types/roles';
 
 export interface GetRolesResponse {
   data: Role[];

@@ -1,5 +1,5 @@
-import { Client } from '@/models/clients';
 import { api } from '@/services/auth';
+import { Client } from '@/types/clients';
 
 export interface GetClientsResponse {
   data: Client[];
