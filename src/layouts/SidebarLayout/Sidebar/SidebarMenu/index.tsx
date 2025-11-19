@@ -1,11 +1,12 @@
 import { SidebarContext } from '@/contexts/SidebarContext';
 import OpenMenuSVG from '@/layouts/SidebarLayout/Sidebar/SidebarMenu/sidebaropen.svg';
 import { PAGE_PERMISSIONS } from '@/types/permissions';
+import CategoryIcon from '@/ui/icons/category.svg';
 import DocsIcon from '@/ui/icons/Docs';
 import HomeIcon from '@/ui/icons/home.svg';
 import HRMIcon from '@/ui/icons/HRM.svg';
 import InfoIcon from '@/ui/icons/Info';
-import UsersIcon, { default as ClientsIcon } from '@/ui/icons/user.svg'; // Import the new UsersIcon
+import UsersIcon from '@/ui/icons/user.svg';
 import CanCall from '@/utils/ability';
 import useTrans from '@/utils/translation_util';
 import { styled } from '@mui/material';
@@ -232,9 +233,9 @@ const SubMenuWrapper = styled('div')(
 
 interface SidebarMenuItemData {
   link: string;
-  id: number;
+  icon: string | { src: string } | React.ComponentType<any>;
   label: string;
-  icon: { src: string } | string | React.ComponentType<any>;
+  id: number;
   permission?: string;
 }
 
@@ -360,10 +361,10 @@ function SidebarMenu() {
       permission: '' // PAGE_PERMISSIONS.ROLES
     },
     {
-      link: '/clients',
+      link: '/instances',
       id: 4,
-      label: 'Clients',
-      icon: ClientsIcon,
+      label: 'Instances',
+      icon: CategoryIcon,
       permission: PAGE_PERMISSIONS.CLIENTS
     },
     {

@@ -1,19 +1,19 @@
 import type { RootState } from '@/app/store';
 import SuspenseLoader from '@/components/SuspenseLoader';
-import ClientForm from '@/features/clients/components/ClientForm';
-import ClientListItem from '@/features/clients/components/ClientListItem';
+import InstanceForm from '@/features/instances/components/InstanceForm';
+import InstanceListItem from '@/features/instances/components/InstanceListItem';
 import { TopNav } from '@/features/shared/components/DashboardShared';
-import { Client } from '@/types/clients';
+import { Instance } from '@/types/instances';
 import Badge from '@/ui/Badge';
-import ClientsIcon from '@/ui/icons/user.svg';
+import CategoryIcon from '@/ui/icons/category.svg';
 import ListComponent from '@/ui/List';
 import ListItemComponent from '@/ui/List/ListItem';
 import ModalComponent from '@/ui/Modal';
-import ConfirmationModal from '@/ui/Modal/ConfirmationModal'; // Import ConfirmationModal
+import ConfirmationModal from '@/ui/Modal/ConfirmationModal';
 import ModalHeader from '@/ui/Modal/ModalHeader';
 import TableComponent, { TableColumn } from '@/ui/Table/TableComponent';
-import ToolTip from '@/ui/Tooltip'; // Import ToolTip
-import { truncateMiddle } from '@/utils/string_utils'; // Import truncateMiddle
+import ToolTip from '@/ui/Tooltip';
+import { truncateMiddle } from '@/utils/string_utils';
 import useTrans from '@/utils/translation_util';
 import KeyIcon from '@mui/icons-material/Key';
 import { Button } from '@mui/material';
@@ -22,14 +22,14 @@ import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSelector } from 'react-redux';
 import {
-  useAddClientMutation,
-  useDeleteClientMutation,
-  useGetClientsQuery,
-  useUpdateClientMutation
-} from 'src/services/clients';
-import { PermissionKey } from 'src/types/permissions'; // Import PermissionKey enum
+  useAddInstanceMutation,
+  useDeleteInstanceMutation,
+  useGetInstancesQuery,
+  useUpdateInstanceMutation
+} from 'src/services/instances';
+import { PermissionKey } from 'src/types/permissions';
 
-const initialState: Client = {
+const initialState: Instance = {
   id: undefined,
   name: '',
   phone_number_id: '',
@@ -42,8 +42,8 @@ const initialState: Client = {
   status: 'active'
 };
 
-const clientTableColumns: TableColumn<Client>[] = [
-  { id: 'name', label: 'Client Name', minWidth: 170 },
+const instanceTableColumns: TableColumn<Instance>[] = [
+  { id: 'name', label: 'Instance Name', minWidth: 170 },
   { id: 'display_phone_number', label: 'Phone Number', minWidth: 100 },
   { id: 'whatsapp_business_id', label: 'WhatsApp Business ID', minWidth: 170 },
   {
@@ -81,7 +81,7 @@ const clientTableColumns: TableColumn<Client>[] = [
     label: 'API Keys',
     minWidth: 120,
     align: 'center',
-    format: (value: any, row: Client) => {
+    format: (value: any, row: Instance) => {
       const router = useRouter();
       const handleViewApiKeys = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -104,42 +104,45 @@ const clientTableColumns: TableColumn<Client>[] = [
   { id: 'actions', label: 'Actions', minWidth: 170, align: 'center' }
 ];
 
-function Clients() {
+function Instances() {
   const trans = useTrans();
 
-  const { data: Clients, isLoading: isLoadingClients } = useGetClientsQuery();
+  const { data: Instances, isLoading: isLoadingInstances } =
+    useGetInstancesQuery();
   const [
-    addClient,
+    addInstance,
     {
       isLoading: isAddLoading,
       isSuccess: isAddSuccess,
       isError: isAddError,
       reset: resetAdd
     }
-  ] = useAddClientMutation();
+  ] = useAddInstanceMutation();
   const [
-    updateClient,
+    updateInstance,
     {
       isLoading: isUpdateLoading,
       isSuccess: isUpdateSuccess,
       isError: isUpdateError,
       reset: resetUpdate
     }
-  ] = useUpdateClientMutation();
+  ] = useUpdateInstanceMutation();
   const [
-    deleteClient,
+    deleteInstance,
     {
       isLoading: isDeleteLoading,
       isSuccess: isDeleteSuccess,
       isError: isDeleteError,
       reset: resetDelete
     }
-  ] = useDeleteClientMutation();
+  ] = useDeleteInstanceMutation();
   const [open, setOpen] = useState<boolean>(false);
   const [mode, setMode] = useState<'add' | 'update' | 'preview'>('preview');
-  const [currentData, setCurrentData] = useState<Client>(initialState);
+  const [currentData, setCurrentData] = useState<Instance>(initialState);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false); // State for confirmation modal
-  const [clientToDelete, setClientToDelete] = useState<Client | null>(null); // State to store client to delete
+  const [instanceToDelete, setInstanceToDelete] = useState<Instance | null>(
+    null
+  ); // State to store client to delete
 
   const viewMode = useSelector((state: RootState) => state.viewMode.mode);
 
@@ -159,40 +162,40 @@ function Clients() {
     isDeleteError
   ]);
 
-  const handleEditClient = (client: Client) => {
+  const handleEditClient = (client: Instance) => {
     setCurrentData(client);
     setMode('update');
     setOpen(true);
   };
 
-  const handleDeleteClient = (client: Client) => {
-    setClientToDelete(client);
+  const handleDeleteClient = (client: Instance) => {
+    setInstanceToDelete(client);
     setOpenConfirm(true);
   };
 
   const handleConfirmDelete = () => {
-    if (clientToDelete) {
-      deleteClient(clientToDelete);
+    if (instanceToDelete) {
+      deleteInstance(instanceToDelete);
       setOpenConfirm(false);
       setOpen(false);
-      setClientToDelete(null);
+      setInstanceToDelete(null);
     }
   };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
-    setClientToDelete(null);
+    setInstanceToDelete(null);
   };
 
   return (
     <>
       <Helmet>
-        <title>{trans('Clients')}</title>
+        <title>{trans('Instances')}</title>
       </Helmet>
       <TopNav
         add_permission={PermissionKey.CLIENTS_CREATE}
-        table_icon={ClientsIcon}
-        table_name={trans('Clients')}
+        table_icon={CategoryIcon}
+        table_name={trans('Instances')}
         top_name_clk={() => {}}
         open_button_clk={() => {
           setCurrentData({ ...initialState });
@@ -206,7 +209,7 @@ function Clients() {
         <></>
       )}
       <div style={{ padding: '70px 20px 20px 20px' }}>
-        {isLoadingClients ? (
+        {isLoadingInstances ? (
           <SuspenseLoader />
         ) : viewMode === 'list' ? (
           <ListComponent>
@@ -224,8 +227,8 @@ function Clients() {
               ) : (
                 <></>
               )}
-              {Clients?.map((one, index) => (
-                <ClientListItem
+              {Instances?.map((one, index) => (
+                <InstanceListItem
                   key={one.id}
                   one={one}
                   index={index}
@@ -239,7 +242,7 @@ function Clients() {
                   setMode={setMode}
                   setCurrentData={setCurrentData}
                   setOpen={setOpen}
-                  handleDeleteClient={handleDeleteClient} // Pass handleDeleteClient
+                  handleDeleteClient={handleDeleteClient}
                   edit_permission={PermissionKey.CLIENTS_UPDATE}
                   delete_permission={PermissionKey.CLIENTS_DELETE}
                 />
@@ -248,8 +251,8 @@ function Clients() {
           </ListComponent>
         ) : (
           <TableComponent
-            columns={clientTableColumns}
-            data={Clients || []}
+            columns={instanceTableColumns}
+            data={Instances || []}
             onEdit={handleEditClient}
             onDelete={handleDeleteClient}
             edit_permission={PermissionKey.CLIENTS_UPDATE}
@@ -265,7 +268,7 @@ function Clients() {
                 update_permission={PermissionKey.CLIENTS_UPDATE}
                 delete_permission={PermissionKey.CLIENTS_DELETE}
                 Delete={() => {
-                  handleDeleteClient(currentData); // Call handleDeleteClient to open confirmation modal
+                  handleDeleteClient(currentData);
                 }}
                 close={() => {
                   setOpen(false);
@@ -273,8 +276,8 @@ function Clients() {
                 }}
                 title={
                   currentData?.name
-                    ? `${trans('Client')}: ${currentData.name}`
-                    : trans('Client')
+                    ? `${trans('Instance')}: ${currentData.name}`
+                    : trans('Instance')
                 }
                 mode={mode}
                 icon={<></>}
@@ -286,26 +289,28 @@ function Clients() {
                 addChild={() => {}}
                 clear_button_clk={() => {
                   if (mode === 'update') {
-                    if (Clients?.filter((one) => one.id === currentData.id)[0])
+                    if (
+                      Instances?.filter((one) => one.id === currentData.id)[0]
+                    )
                       setCurrentData(
-                        Clients?.filter((one) => one.id === currentData.id)[0]
+                        Instances?.filter((one) => one.id === currentData.id)[0]
                       );
                   } else {
                     setCurrentData(initialState);
                   }
                 }}
               />
-              <ClientForm
+              <InstanceForm
                 currentData={currentData}
                 setCurrentData={setCurrentData}
                 mode={mode}
                 add_button_clk={() => {
-                  addClient(currentData);
+                  addInstance(currentData);
                   setOpen(false);
                   setCurrentData(initialState);
                 }}
                 edit_button_clk={() => {
-                  updateClient(currentData);
+                  updateInstance(currentData);
                   setOpen(false);
                   setMode('preview');
                 }}
@@ -319,13 +324,15 @@ function Clients() {
           onClose={handleCloseConfirm}
           onConfirm={handleConfirmDelete}
           title={trans('Confirm Delete')}
-          message={trans(
-            `Are you sure you want to delete client "${clientToDelete?.name}"? This action cannot be undone.`
-          )}
+          message={
+            instanceToDelete
+              ? `${trans('Are you sure you want to delete')} ${instanceToDelete.name}?`
+              : trans('Are you sure you want to delete this item?')
+          }
         />
       </div>
     </>
   );
 }
 
-export default Clients;
+export default Instances;

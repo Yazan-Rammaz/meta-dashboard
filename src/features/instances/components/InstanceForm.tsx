@@ -1,4 +1,4 @@
-import { Client } from '@/types/clients';
+import { Instance } from '@/types/instances'; // Will be renamed later
 import ModalActionButton from '@/ui/Button/modalActionButton';
 import Input from '@/ui/Input';
 import ModalBody from '@/ui/Modal/ModalBody';
@@ -7,14 +7,14 @@ import useTrans from '@/utils/translation_util';
 import { useEffect } from 'react';
 
 interface Props {
-  currentData: Client;
-  setCurrentData: (data: Client) => void;
+  currentData: Instance;
+  setCurrentData: (data: Instance) => void;
   add_button_clk: () => void;
   edit_button_clk: () => void;
   mode: 'add' | 'update' | 'preview';
 }
 
-export default function ClientForm({
+export default function InstanceForm({
   currentData,
   setCurrentData,
   mode,
@@ -30,11 +30,11 @@ export default function ClientForm({
   return (
     <ModalBody>
       <>
-        <ModalSection title={trans('Client Details')}>
+        <ModalSection title={trans('Instance Details')}>
           <>
             <Input
               size={4}
-              title={trans('Name')}
+              title={trans('Instance Name')}
               value={currentData.name || ''}
               disabled={mode === 'preview'}
               clear={() => {
@@ -91,7 +91,7 @@ export default function ClientForm({
             />
             <Input
               size={4}
-              title={trans('WhatsApp Business ID')}
+              title={trans('Whatsapp Business ID')}
               value={currentData.whatsapp_business_id || ''}
               disabled={mode === 'preview'}
               clear={() => {
@@ -169,7 +169,9 @@ export default function ClientForm({
         </ModalSection>
         {mode !== 'preview' ? (
           <ModalActionButton
-            text={mode === 'add' ? trans('Add Client') : trans('Edit Client')}
+            text={
+              mode === 'add' ? trans('Add Instance') : trans('Edit Instance')
+            }
             disabled={false}
             onClick={() => {
               if (mode === 'add') {

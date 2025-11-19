@@ -1,11 +1,10 @@
 'use client';
 
-import React from 'react';
-import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import { Box, CircularProgress } from '@mui/material';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 export default function ClientLayout({
   children

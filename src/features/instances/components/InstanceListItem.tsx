@@ -1,4 +1,4 @@
-import { Client } from '@/types/clients';
+import { Instance } from '@/types/instances'; // Will be renamed later
 import Badge from '@/ui/Badge';
 import ListItemComponent from '@/ui/List/ListItem';
 import ToolTip from '@/ui/Tooltip';
@@ -7,10 +7,10 @@ import { Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-interface ClientListItemProps {
-  one: Client;
+interface InstanceListItemProps {
+  one: Instance;
   index: number;
-  currentData: Client;
+  currentData: Instance;
   isUpdateLoading: boolean;
   isDeleteLoading: boolean;
   isUpdateSuccess: boolean;
@@ -18,14 +18,14 @@ interface ClientListItemProps {
   isUpdateError: boolean;
   isDeleteError: boolean;
   setMode: (mode: 'add' | 'update' | 'preview') => void;
-  setCurrentData: (data: Client) => void;
+  setCurrentData: (data: Instance) => void;
   setOpen: (open: boolean) => void;
-  handleDeleteClient: (client: Client) => void; // Add handleDeleteClient prop
-  edit_permission: string; // Add edit_permission
-  delete_permission: string; // Add delete_permission
+  handleDeleteClient: (client: Instance) => void;
+  edit_permission: string;
+  delete_permission: string;
 }
 
-const ClientListItem: React.FC<ClientListItemProps> = ({
+const InstanceListItem: React.FC<InstanceListItemProps> = ({
   one,
   index,
   currentData,
@@ -38,9 +38,9 @@ const ClientListItem: React.FC<ClientListItemProps> = ({
   setMode,
   setCurrentData,
   setOpen,
-  handleDeleteClient, // Destructure handleDeleteClient
-  edit_permission, // Destructure edit_permission
-  delete_permission // Destructure delete_permission
+  handleDeleteClient,
+  edit_permission,
+  delete_permission
 }) => {
   const router = useRouter();
 
@@ -71,7 +71,7 @@ const ClientListItem: React.FC<ClientListItemProps> = ({
         setCurrentData(one);
         setOpen(true);
       }}
-      handleDelete={() => handleDeleteClient(one)} // Pass client to handleDeleteClient
+      handleDelete={() => handleDeleteClient(one)}
       edit_permission={edit_permission}
       delete_permission={delete_permission}
     >
@@ -125,4 +125,4 @@ const ClientListItem: React.FC<ClientListItemProps> = ({
   );
 };
 
-export default ClientListItem;
+export default InstanceListItem;
