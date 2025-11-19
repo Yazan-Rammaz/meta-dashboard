@@ -3,6 +3,7 @@ import ModalActionButton from '@/ui/Button/modalActionButton';
 import Input from '@/ui/Input';
 import ModalBody from '@/ui/Modal/ModalBody';
 import ModalSection from '@/ui/ModalSection';
+import Select from '@/ui/Select';
 import useTrans from '@/utils/translation_util';
 import { useEffect } from 'react';
 
@@ -12,6 +13,7 @@ interface Props {
   add_button_clk: () => void;
   edit_button_clk: () => void;
   mode: 'add' | 'update' | 'preview';
+  initialData: User; // Add initialData prop to reset to
 }
 
 export default function UserForm({
@@ -19,9 +21,14 @@ export default function UserForm({
   setCurrentData,
   mode,
   add_button_clk,
-  edit_button_clk
+  edit_button_clk,
+  initialData
 }: Props) {
   const trans = useTrans();
+
+  const reset_button_clk = () => {
+    setCurrentData(initialData);
+  };
 
   useEffect(() => {
     // Any initialization or data transformation specific to UserModal
@@ -93,24 +100,22 @@ export default function UserForm({
               />
             )}
 
-            <Input
+            <Select
               size={4}
               title={trans('Role')}
               value={currentData.role || ''}
               disabled={mode === 'preview'}
-              clear={() => {
-                setCurrentData({
-                  ...currentData,
-                  role: ''
-                });
-              }}
               onChange={(value: string | number) => {
                 setCurrentData({
                   ...currentData,
                   role: String(value)
                 });
               }}
-              type="text"
+              options={[
+                { value: 'admin', label: 'Admin' },
+                { value: 'user', label: 'User' },
+                { value: 'editor', label: 'Editor' }
+              ]}
             />
             <Input
               size={4}
@@ -147,6 +152,13 @@ export default function UserForm({
           />
         ) : (
           <></>
+        )}
+        {mode !== 'preview' && (
+          <ModalActionButton
+            text={trans('Reset')}
+            disabled={false}
+            onClick={reset_button_clk}
+          />
         )}
       </>
     </ModalBody>

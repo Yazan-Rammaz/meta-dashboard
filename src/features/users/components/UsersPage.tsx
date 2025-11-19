@@ -256,6 +256,7 @@ function Users() {
                   setOpen(false);
                   setMode('preview');
                 }}
+                initialData={initialState} // Pass initialState as initialData prop
               />
             </>
           </ModalComponent>

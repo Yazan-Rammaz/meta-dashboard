@@ -1,3 +1,4 @@
+import { PermissionKey } from '@/types/permissions';
 import AddIcon from '@/ui/Modal/icons/addIcon';
 import Close from '@/ui/Modal/icons/close';
 import DeleteIcon from '@/ui/Modal/icons/deleteIcon';
@@ -167,7 +168,7 @@ export default function ModalHeader({
   addChild,
   hasAddSub,
   add_permission,
-  revoke_permission,
+  revoke_permission = PermissionKey.NOCODE,
   delete_permission,
   update_permission
 }: ModalProps) {
@@ -208,15 +209,17 @@ export default function ModalHeader({
                   <DeleteIcon />
                 </IconContainer>
               </ToolTip>
-              <ToolTip text={useTrans()('Revoke')}>
-                <IconContainer
-                  onClick={() => {
-                    Revoke();
-                  }}
-                >
-                  <DeleteIcon />
-                </IconContainer>
-              </ToolTip>
+              <CanCall permission={revoke_permission}>
+                <ToolTip text={useTrans()('Revoke')}>
+                  <IconContainer
+                    onClick={() => {
+                      Revoke();
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconContainer>
+                </ToolTip>
+              </CanCall>
               <ToolTip text={useTrans()('Reset')}>
                 <IconContainer
                   onClick={() => {

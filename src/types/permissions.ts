@@ -1,4 +1,5 @@
 export const enum PermissionKey {
+  NOCODE = 'NOCODE',
   SUPER_ADMIN = 'SUPER_ADMIN',
   VIEW_ROLES = 'VIEW_ROLES',
   ROLES_CREATE = 'roles.create',
