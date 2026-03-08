@@ -54,7 +54,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "pages:build": "npx @cloudflare/next-on-pages",
     "start": "next start",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
@@ -73,7 +72,6 @@
     ]
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1",
     "@tanstack/react-query-devtools": "^5.91.3",
     "@types/node": "^25.3.5",
     "@types/nprogress": "^0.2.3",
@@ -85,7 +83,6 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^17.4.0",
-    "prettier": "^3.8.1",
-    "wrangler": "^3.114.0"
+    "prettier": "^3.8.1"
   }
 }
