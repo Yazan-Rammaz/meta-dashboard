@@ -1,69 +1,54 @@
-import { api } from '@/services/auth';
+import { apiFetch } from '@/lib/apiFetch';
+import { queryClient } from '@/lib/queryClient';
 import { Language } from '@/models/languages';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
-export interface GetLanguagesResponse {
-  data: Language[];
+export function useGetlanguagesQuery(options?: {
+    staleTime?: number;
+    enabled?: boolean;
+    initialData?: Language[];
+}) {
+    return useQuery({
+        queryKey: ['languages'],
+        queryFn: async () => {
+            const result = await apiFetch<{ data: Language[] }>('/languages/all_languages');
+            return result?.data ?? [];
+        },
+        ...options,
+    });
 }
 
-export const LanguagesApi = api.injectEndpoints({
-  overrideExisting: true,
-  endpoints: (builder) => ({
-    getlanguages: builder.query<Array<Language>, void>({
-      query: () => ({
-        url: '/languages/all_languages',
-        method: 'GET'
-      }),
-      transformResponse: (response: GetLanguagesResponse) => {
-        return response.data;
-      },
-      providesTags: (result) =>
-        // is result available?
-        result
-          ? [
-              ...result.map(({ id }) => ({
-                type: 'Languages' as const,
-                id
-              })),
-              { type: 'Languages', id: 'LIST' }
-            ]
-          : [{ type: 'Languages', id: 'LIST' }]
-    }),
-    addLanguage: builder.mutation<Language, Partial<Language>>({
-      query(body) {
-        return {
-          url: `/languages/create`,
-          method: 'POST',
-          body
-        };
-      },
-      invalidatesTags: [{ type: 'Languages', id: 'LIST' }]
-    }),
-    updateLanguage: builder.mutation<Language, Partial<Language>>({
-      query(body) {
-        return {
-          url: `/languages/update/${body.language_code}`,
-          method: 'PUT',
-          body
-        };
-      },
-      invalidatesTags: [{ type: 'Languages', id: 'LIST' }]
-    }),
-    deleteLanguage: builder.mutation<Language, Partial<Language>>({
-      query(body) {
-        return {
-          url: `/languages/destroy/${body.language_code}`,
-          method: 'DELETE',
-          body
-        };
-      },
-      invalidatesTags: [{ type: 'Languages', id: 'LIST' }]
-    })
-  })
-});
+export function useAddLanguageMutation() {
+    return useMutation({
+        mutationKey: ['languages', 'add'],
+        mutationFn: async (language: Partial<Language>) => {
+            return apiFetch('/languages/create', { method: 'POST', body: language });
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['languages'] }),
+    });
+}
 
-export const {
-  useDeleteLanguageMutation,
-  useGetlanguagesQuery,
-  useAddLanguageMutation,
-  useUpdateLanguageMutation
-} = LanguagesApi;
+export function useUpdateLanguageMutation() {
+    return useMutation({
+        mutationKey: ['languages', 'update'],
+        mutationFn: async (language: Partial<Language>) => {
+            return apiFetch(`/languages/update/${language.language_code}`, {
+                method: 'PUT',
+                body: language,
+            });
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['languages'] }),
+    });
+}
+
+export function useDeleteLanguageMutation() {
+    return useMutation({
+        mutationKey: ['languages', 'delete'],
+        mutationFn: async (language: Partial<Language>) => {
+            return apiFetch(`/languages/destroy/${language.language_code}`, {
+                method: 'DELETE',
+            });
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['languages'] }),
+    });
+}

@@ -13,10 +13,10 @@ import { styled } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useContext } from 'react';
+import { JSX, useContext } from 'react';
 
 const MenuWrapper = styled('div')(
-  ({ theme }) => `
+    ({ theme }) => `
   width: 100%;
   height: 100%;
   box-sizing: border-box;
@@ -40,13 +40,13 @@ const MenuWrapper = styled('div')(
     text-align: start;
     width: -webkit-fill-available;
     }
-`
+`,
 );
 const LinkButton = styled(Link)<{
-  $sidebarToggle?: boolean;
-  $isActive?: boolean;
+    $sidebarToggle?: boolean;
+    $isActive?: boolean;
 }>(
-  ({ $sidebarToggle, $isActive }) => `
+    ({ $sidebarToggle, $isActive }) => `
     margin-bottom: 8px;
     margin-left: ${$sidebarToggle ? '12px' : '0'};
     margin-right: ${$sidebarToggle ? '12px' : '0'};
@@ -75,10 +75,10 @@ const LinkButton = styled(Link)<{
     &:active {
       transform: translateX(${$sidebarToggle ? '1px' : '0'}) scale(0.98);
     }
-  `
+  `,
 );
 const LinkButtonText = styled('div')<{ $sidebarToggle?: boolean }>(
-  ({ $sidebarToggle }) => `
+    ({ $sidebarToggle }) => `
     font-size: 14px;
     font-weight: 500;
     width: fit-content;
@@ -97,10 +97,10 @@ const LinkButtonText = styled('div')<{ $sidebarToggle?: boolean }>(
     pointer-events: ${$sidebarToggle ? 'auto' : 'none'};
     width: ${$sidebarToggle ? 'fit-content' : '0'};
     overflow: hidden;
-  `
+  `,
 );
 const SubMenuWrapper = styled('div')(
-  ({ theme }) => `
+    ({ theme }) => `
     padding: 0;
     overflow: visible;
     width: 100%;
@@ -203,10 +203,7 @@ const SubMenuWrapper = styled('div')(
                 content: ' ';
                 background: ${theme.colors.alpha.black[100]};
                 opacity: 0;
-                transition: ${theme.transitions.create([
-                  'transform',
-                  'opacity'
-                ])};
+                transition: ${theme.transitions.create(['transform', 'opacity'])};
                 width: 6px;
                 height: 6px;
                 transform: scale(0);
@@ -228,241 +225,232 @@ const SubMenuWrapper = styled('div')(
         }
       }
     }
-`
+`,
 );
 
 interface SidebarMenuItemData {
-  link: string;
-  id: number;
-  label: string;
-  icon: { src: string } | string | React.ComponentType<any>;
-  permission?: string;
+    link: string;
+    id: number;
+    label: string;
+    icon: { src: string } | string | React.ComponentType<any>;
+    permission?: string;
 }
 
 interface SidebarMenuItemProps {
-  item: SidebarMenuItemData;
-  renderIcon: (
-    IconComponent: { src: string } | string | React.ComponentType<any>,
-    active: boolean,
-    id: number
-  ) => JSX.Element;
-  sidebarToggle: boolean;
-  isActive: boolean;
+    item: SidebarMenuItemData;
+    renderIcon: (
+        IconComponent: { src: string } | string | React.ComponentType<any>,
+        active: boolean,
+        id: number,
+    ) => JSX.Element;
+    sidebarToggle: boolean;
+    isActive: boolean;
 }
 
-function SidebarMenuItem({
-  item,
-  renderIcon,
-  sidebarToggle,
-  isActive
-}: SidebarMenuItemProps) {
-  const trans = useTrans();
+function SidebarMenuItem({ item, renderIcon, sidebarToggle, isActive }: SidebarMenuItemProps) {
+    const trans = useTrans();
 
-  const menuItem = (
-    <LinkButton
-      href={item.link}
-      $sidebarToggle={sidebarToggle}
-      $isActive={isActive}
-      style={{
-        color: isActive ? '#404040' : '#8E8E8E'
-      }}
-    >
-      {renderIcon(item.icon, isActive, item.id)}
-      <LinkButtonText $sidebarToggle={sidebarToggle}>
-        {trans(item.label)}
-      </LinkButtonText>
-    </LinkButton>
-  );
+    const menuItem = (
+        <LinkButton
+            href={item.link}
+            $sidebarToggle={sidebarToggle}
+            $isActive={isActive}
+            style={{
+                color: isActive ? '#404040' : '#8E8E8E',
+            }}
+        >
+            {renderIcon(item.icon, isActive, item.id)}
+            <LinkButtonText $sidebarToggle={sidebarToggle}>{trans(item.label)}</LinkButtonText>
+        </LinkButton>
+    );
 
-  if (item.permission) {
-    return <CanCall permission={item.permission}>{menuItem}</CanCall>;
-  }
+    if (item.permission) {
+        return <CanCall permission={item.permission}>{menuItem}</CanCall>;
+    }
 
-  return menuItem;
+    return menuItem;
 }
 
 function SidebarMenu() {
-  const { sidebarToggle, toggleSidebar, closeSidebar } =
-    useContext(SidebarContext);
-  const pathname = usePathname();
+    const { sidebarToggle, toggleSidebar, closeSidebar } = useContext(SidebarContext);
+    const pathname = usePathname();
 
-  const renderIcon = (
-    IconComponent: { src: string } | string | React.ComponentType<any>,
-    active: boolean,
-    id: number
-  ) => {
-    if (typeof IconComponent === 'function') {
-      const Icon = IconComponent;
-      return (
-        <div
-          style={{
-            width: '22px',
-            height: '22px',
-            marginRight: sidebarToggle ? '12px' : '0',
-            marginLeft: sidebarToggle ? '0' : '0',
-            padding: sidebarToggle ? '0' : '4px',
-            minWidth: '22px',
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-            transform: active ? 'scale(1.05)' : 'scale(1)',
-            opacity: 1,
-            visibility: 'visible',
-            color: active ? '#404040' : '#A2A0A0'
-          }}
-        >
-          <Icon />
-        </div>
-      );
-    }
+    const renderIcon = (
+        IconComponent: { src: string } | string | React.ComponentType<any>,
+        active: boolean,
+        id: number,
+    ) => {
+        if (typeof IconComponent === 'function') {
+            const Icon = IconComponent;
+            return (
+                <div
+                    style={{
+                        width: '22px',
+                        height: '22px',
+                        marginRight: sidebarToggle ? '12px' : '0',
+                        marginLeft: sidebarToggle ? '0' : '0',
+                        padding: sidebarToggle ? '0' : '4px',
+                        minWidth: '22px',
+                        flexShrink: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        transform: active ? 'scale(1.05)' : 'scale(1)',
+                        opacity: 1,
+                        visibility: 'visible',
+                        color: active ? '#404040' : '#A2A0A0',
+                    }}
+                >
+                    <Icon />
+                </div>
+            );
+        }
 
-    const imageUrl =
-      typeof IconComponent === 'string' ? IconComponent : IconComponent.src;
-    return (
-      <div
-        style={{
-          width: '22px',
-          height: '22px',
-          marginRight: sidebarToggle ? '12px' : '0',
-          marginLeft: sidebarToggle ? '0' : '0',
-          padding: sidebarToggle ? '0' : '4px',
-          minWidth: '22px',
-          flexShrink: 0,
-          display: 'block',
-          WebkitMask: `url(${imageUrl}) no-repeat center`,
-          mask: `url(${imageUrl}) no-repeat center`,
-          maskSize: 'contain',
-          WebkitMaskSize: 'contain',
-          backgroundColor: active ? '#404040' : '#A2A0A0',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          transform: active ? 'scale(1.05)' : 'scale(1)',
-          opacity: 1,
-          visibility: 'visible'
-        }}
-      />
-    );
-  };
-
-  const menuItems: SidebarMenuItemData[] = [
-    {
-      link: '/',
-      id: 1,
-      label: 'Dashboard',
-      icon: HomeIcon,
-      permission: PAGE_PERMISSIONS.DASHBOARD
-    },
-    {
-      link: '/roles',
-      id: 2,
-      label: 'Roles',
-      icon: HRMIcon,
-      permission: '' // PAGE_PERMISSIONS.ROLES
-    },
-    {
-      link: '/api-keys',
-      id: 3,
-      label: 'API Keys',
-      icon: LinksIcon,
-      permission: PAGE_PERMISSIONS.API_KEYS
-    },
-    {
-      link: '/clients',
-      id: 4,
-      label: 'Clients',
-      icon: ClientsIcon,
-      permission: PAGE_PERMISSIONS.CLIENTS
-    },
-    {
-      link: '/messages',
-      id: 5,
-      label: 'Messages',
-      icon: DocsIcon,
-      permission: PAGE_PERMISSIONS.MESSAGES
-    },
-    {
-      link: '/users',
-      id: 6,
-      label: 'Users',
-      icon: UsersIcon,
-      permission: PAGE_PERMISSIONS.USERS
-    },
-    {
-      link: '/webhooks',
-      id: 7,
-      label: 'Webhooks',
-      icon: InfoIcon,
-      permission: PAGE_PERMISSIONS.WEBHOOKS
-    }
-  ];
-
-  const isActive = (link: string) => {
-    if (link === '/') {
-      return pathname === '/' || pathname === '';
-    }
-    return pathname === link || pathname?.startsWith(link + '/');
-  };
-
-  return (
-    <>
-      <MenuWrapper>
-        <div style={{ width: '100%', boxSizing: 'border-box' }}>
-          <div
-            onClick={toggleSidebar}
-            style={{
-              width: '32px',
-              height: '32px',
-              marginLeft: sidebarToggle ? '12px' : '9px',
-              marginTop: '20px',
-              marginBottom: '30px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '8px',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              backgroundColor: 'transparent'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(64, 64, 64, 0.08)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-            }}
-          >
-            <Image
-              src={OpenMenuSVG.src}
-              alt="Toggle menu icon"
-              width={20}
-              height={20}
-              style={{
-                transform: sidebarToggle ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-              }}
+        const imageUrl = typeof IconComponent === 'string' ? IconComponent : IconComponent.src;
+        return (
+            <div
+                style={{
+                    width: '22px',
+                    height: '22px',
+                    marginRight: sidebarToggle ? '12px' : '0',
+                    marginLeft: sidebarToggle ? '0' : '0',
+                    padding: sidebarToggle ? '0' : '4px',
+                    minWidth: '22px',
+                    flexShrink: 0,
+                    display: 'block',
+                    WebkitMask: `url(${imageUrl}) no-repeat center`,
+                    mask: `url(${imageUrl}) no-repeat center`,
+                    maskSize: 'contain',
+                    WebkitMaskSize: 'contain',
+                    backgroundColor: active ? '#404040' : '#A2A0A0',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transform: active ? 'scale(1.05)' : 'scale(1)',
+                    opacity: 1,
+                    visibility: 'visible',
+                }}
             />
-          </div>
-          <SubMenuWrapper
-            style={{
-              alignItems: sidebarToggle ? 'stretch' : 'center',
-              width: '100%',
-              boxSizing: 'border-box'
-            }}
-          >
-            {menuItems.map((item) => (
-              <SidebarMenuItem
-                key={item.id}
-                item={item}
-                renderIcon={renderIcon}
-                sidebarToggle={sidebarToggle}
-                isActive={isActive(item.link)}
-              />
-            ))}
-          </SubMenuWrapper>
-        </div>
-      </MenuWrapper>
-    </>
-  );
+        );
+    };
+
+    const menuItems: SidebarMenuItemData[] = [
+        {
+            link: '/',
+            id: 1,
+            label: 'Dashboard',
+            icon: HomeIcon,
+            permission: PAGE_PERMISSIONS.DASHBOARD,
+        },
+        {
+            link: '/roles',
+            id: 2,
+            label: 'Roles',
+            icon: HRMIcon,
+            permission: '', // PAGE_PERMISSIONS.ROLES
+        },
+        {
+            link: '/api-keys',
+            id: 3,
+            label: 'API Keys',
+            icon: LinksIcon,
+            permission: PAGE_PERMISSIONS.API_KEYS,
+        },
+        {
+            link: '/clients',
+            id: 4,
+            label: 'Clients',
+            icon: ClientsIcon,
+            permission: PAGE_PERMISSIONS.CLIENTS,
+        },
+        {
+            link: '/messages',
+            id: 5,
+            label: 'Messages',
+            icon: DocsIcon,
+            permission: PAGE_PERMISSIONS.MESSAGES,
+        },
+        {
+            link: '/users',
+            id: 6,
+            label: 'Users',
+            icon: UsersIcon,
+            permission: PAGE_PERMISSIONS.USERS,
+        },
+        {
+            link: '/webhooks',
+            id: 7,
+            label: 'Webhooks',
+            icon: InfoIcon,
+            permission: PAGE_PERMISSIONS.WEBHOOKS,
+        },
+    ];
+
+    const isActive = (link: string) => {
+        if (link === '/') {
+            return pathname === '/' || pathname === '';
+        }
+        return pathname === link || pathname?.startsWith(link + '/');
+    };
+
+    return (
+        <>
+            <MenuWrapper>
+                <div style={{ width: '100%', boxSizing: 'border-box' }}>
+                    <div
+                        onClick={toggleSidebar}
+                        style={{
+                            width: '32px',
+                            height: '32px',
+                            marginLeft: sidebarToggle ? '12px' : '9px',
+                            marginTop: '20px',
+                            marginBottom: '30px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '8px',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                            backgroundColor: 'transparent',
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = 'rgba(64, 64, 64, 0.08)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                        }}
+                    >
+                        <Image
+                            src={OpenMenuSVG.src}
+                            alt="Toggle menu icon"
+                            width={20}
+                            height={20}
+                            style={{
+                                transform: sidebarToggle ? 'rotate(180deg)' : 'rotate(0deg)',
+                                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                            }}
+                        />
+                    </div>
+                    <SubMenuWrapper
+                        style={{
+                            alignItems: sidebarToggle ? 'stretch' : 'center',
+                            width: '100%',
+                            boxSizing: 'border-box',
+                        }}
+                    >
+                        {menuItems.map((item) => (
+                            <SidebarMenuItem
+                                key={item.id}
+                                item={item}
+                                renderIcon={renderIcon}
+                                sidebarToggle={sidebarToggle}
+                                isActive={isActive(item.link)}
+                            />
+                        ))}
+                    </SubMenuWrapper>
+                </div>
+            </MenuWrapper>
+        </>
+    );
 }
 
 export default SidebarMenu;

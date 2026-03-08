@@ -1,53 +1,42 @@
-import { api } from '@/services/auth';
+import { apiFetch } from '@/lib/apiFetch';
+import { useQuery } from '@tanstack/react-query';
 
 export interface Permission {
-  id: string;
-  key: string;
-  description: string;
-  created_at: string;
-  // name: string;
-  // guard_name: string;
-  // title: string; // Added title property
-  // updated_at: string;
+    id: string;
+    key: string;
+    description: string;
+    created_at: string;
 }
 
-export interface GetPermissionsResponse {
-  data: Permission[];
+export function useGetpermissionsQuery() {
+    return useQuery({
+        queryKey: ['permissions', 'me'],
+        queryFn: async () => {
+            const result = await apiFetch<{ data: Permission[] }>('/users/me/permissions');
+            return result?.data ?? [];
+        },
+    });
 }
 
-export const permissionsApi = api.injectEndpoints({
-  endpoints: (builder) => ({
-    getpermissions: builder.query<Array<Permission>, void>({
-      query: () => ({
-        url: '/users/me/permissions',
-        method: 'GET'
-      }),
-      transformResponse: (response: GetPermissionsResponse) => {
-        return response.data;
-      }
-    }),
-    getAllPermissions: builder.query<Array<Permission>, void>({
-      query: () => ({
-        url: '/permissions',
-        method: 'GET'
-      }),
-      transformResponse: (response: GetPermissionsResponse) => {
-        return response.data;
-      }
-    }),
-    getAllPermissionsBySearch: builder.mutation<Array<Permission>, string>({
-      query: (body) => ({
-        url: `/permissions?search_word=${body}`,
-        method: 'GET'
-      }),
-      transformResponse: (response: GetPermissionsResponse) => {
-        return response.data;
-      }
-    })
-  })
-});
-export const {
-  useGetpermissionsQuery,
-  useGetAllPermissionsBySearchMutation,
-  useGetAllPermissionsQuery
-} = permissionsApi;
+export function useGetAllPermissionsQuery() {
+    return useQuery({
+        queryKey: ['permissions', 'all'],
+        queryFn: async () => {
+            const result = await apiFetch<{ data: Permission[] }>('/permissions');
+            return result?.data ?? [];
+        },
+    });
+}
+
+export function useGetAllPermissionsBySearchQuery(keyword: string) {
+    return useQuery({
+        queryKey: ['permissions', 'search', keyword],
+        queryFn: async () => {
+            const result = await apiFetch<{ data: Permission[] }>(
+                `/permissions?search_word=${keyword}`,
+            );
+            return result?.data ?? [];
+        },
+        enabled: !!keyword,
+    });
+}

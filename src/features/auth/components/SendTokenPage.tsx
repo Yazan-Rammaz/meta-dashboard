@@ -61,9 +61,10 @@ function SendToken({
   missedPassword,
   setSessionToken
 }: SendTokenProps) {
-  const [sendOtp, { isLoading: isSendOtpLoading }] = useSendOtpTokenMutation();
+  const { mutateAsync: sendOtp, isPending: isSendOtpLoading } =
+    useSendOtpTokenMutation();
   const handleSendCodeByEmail = async (username: string) => {
-    const data = await sendOtp(username).unwrap();
+    const data = await sendOtp(username);
     setSessionToken(data.message);
   };
   return (

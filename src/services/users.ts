@@ -1,64 +1,61 @@
+import { apiFetch } from '@/lib/apiFetch';
+import { queryClient } from '@/lib/queryClient';
+import type { PaginatedResponse } from '@/models/pagination';
 import { User } from '@/models/users';
-import { api } from '@/services/auth';
+import { keepPreviousData, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
-export interface GetUsersResponse {
-  data: User[];
+export function useGetUsersQuery(options?: { initialData?: User[]; page?: number }) {
+    const page = options?.page ?? 1;
+    return useQuery({
+        queryKey: ['users', { page }],
+        queryFn: async () => {
+            const result = await apiFetch<PaginatedResponse<User>>(`/users?page=${page}`);
+            return result?.data ?? [];
+        },
+        placeholderData: keepPreviousData,
+        ...(options?.initialData !== undefined ? { initialData: options.initialData } : {}),
+    });
 }
 
-export const UsersApi = api.injectEndpoints({
-  endpoints: (builder) => ({
-    getUsers: builder.query<Array<User>, void>({
-      query: () => ({
-        url: '/users',
-        method: 'GET'
-      }),
-      transformResponse: (response: GetUsersResponse) => {
-        return response.data;
-      },
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(({ id }) => ({ type: 'Users', id }) as const),
-              { type: 'Users', id: 'LIST' }
-            ]
-          : [{ type: 'Users', id: 'LIST' }]
-    }),
-    addUser: builder.mutation<User, Partial<User>>({
-      query(body) {
-        return {
-          url: `/users`,
-          method: 'POST',
-          body
-        };
-      },
-      invalidatesTags: [{ type: 'Users', id: 'LIST' }]
-    }),
-    updateUser: builder.mutation<User, Partial<User>>({
-      query(body) {
-        return {
-          url: `/users/${body.id}`,
-          method: 'PUT',
-          body
-        };
-      },
-      invalidatesTags: [{ type: 'Users', id: 'LIST' }]
-    }),
-    deleteUser: builder.mutation<User, Partial<User>>({
-      query(body) {
-        return {
-          url: `/users/${body.id}`,
-          method: 'DELETE',
-          body
-        };
-      },
-      invalidatesTags: [{ type: 'Users', id: 'LIST' }]
-    })
-  })
-});
+export function useGetUsersInfiniteQuery() {
+    return useInfiniteQuery({
+        queryKey: ['users', 'infinite'],
+        queryFn: ({ pageParam }) =>
+            apiFetch<PaginatedResponse<User>>(`/users?page=${pageParam}&per_page=12`).then(
+                (r) => r!,
+            ),
+        initialPageParam: 1,
+        getNextPageParam: (last) =>
+            last.current_page < last.last_page ? last.current_page + 1 : undefined,
+    });
+}
 
-export const {
-  useGetUsersQuery,
-  useAddUserMutation,
-  useUpdateUserMutation,
-  useDeleteUserMutation
-} = UsersApi;
+export function useAddUserMutation() {
+    return useMutation({
+        mutationKey: ['users', 'add'],
+        mutationFn: async (user: Partial<User>) => {
+            return apiFetch('/users', { method: 'POST', body: user });
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+    });
+}
+
+export function useUpdateUserMutation() {
+    return useMutation({
+        mutationKey: ['users', 'update'],
+        mutationFn: async (user: Partial<User>) => {
+            return apiFetch(`/users/${user.id}`, { method: 'PUT', body: user });
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+    });
+}
+
+export function useDeleteUserMutation() {
+    return useMutation({
+        mutationKey: ['users', 'delete'],
+        mutationFn: async (user: Partial<User>) => {
+            return apiFetch(`/users/${user.id}`, { method: 'DELETE' });
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+    });
+}

@@ -1,50 +1,46 @@
 'use client';
 
-import React from 'react';
-import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
 import SidebarLayout from '@/layouts/SidebarLayout';
+import { useAuthStore } from '@/stores/authStore';
 import { Box, CircularProgress } from '@mui/material';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
-export default function ClientLayout({
-  children
-}: {
-  children: React.ReactNode;
-}) {
-  const auth = useAuth();
-  const router = useRouter();
-  const pathname = usePathname();
-  const [isClient, setIsClient] = useState(false);
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
+    const user = useAuthStore((s) => s.user);
+    const router = useRouter();
+    const pathname = usePathname();
+    const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+    useEffect(() => {
+        useAuthStore.persist.rehydrate();
+        setIsClient(true);
+    }, []);
 
-  useEffect(() => {
-    if (isClient && !auth.user && pathname !== '/login') {
-      router.replace('/login');
+    useEffect(() => {
+        if (isClient && !user && pathname !== '/login') {
+            router.replace('/login');
+        }
+    }, [isClient, user, pathname, router]);
+
+    if (!isClient) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                }}
+            >
+                <CircularProgress />
+            </Box>
+        );
     }
-  }, [isClient, auth.user, pathname, router]);
 
-  if (!isClient) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh'
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+    if (pathname === '/login') {
+        return <>{children}</>;
+    }
 
-  if (pathname === '/login') {
-    return <>{children}</>;
-  }
-
-  return <SidebarLayout>{children}</SidebarLayout>;
+    return <SidebarLayout>{children}</SidebarLayout>;
 }
