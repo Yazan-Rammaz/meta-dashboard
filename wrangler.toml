@@ -1,6 +1,6 @@
 "$schema" = "./node_modules/wrangler/config-schema.json"
 main = ".open-next/worker.js"
-name = "meta-whatsapp-admin-dashboard"
+name = "meta-dashboard"
 # Set this to today's date
 compatibility_date = "2026-03-06"
 compatibility_flags = [ "nodejs_compat" ]
