@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
+// This API route handles user login by forwarding the request to the backend and setting an HTTP-only cookie with the access token on successful authentication.
 export async function POST(req: Request) {
     try {
         const body = await req.json();
