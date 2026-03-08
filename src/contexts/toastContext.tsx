@@ -66,18 +66,19 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
     const showSuccess = useCallback(
         (message: string) =>
-            addToast({ type: 'success', message, autoDismiss: true, dismissAfterMs: 4000 }),
+            addToast({ type: 'success', message, autoDismiss: true, dismissAfterMs: 20000 }),
         [addToast],
     );
 
     const showError = useCallback(
-        (message: string) => addToast({ type: 'error', message, autoDismiss: false }),
+        (message: string) =>
+            addToast({ type: 'error', message, autoDismiss: true, dismissAfterMs: 20000 }),
         [addToast],
     );
 
     const showInfo = useCallback(
         (message: string) =>
-            addToast({ type: 'info', message, autoDismiss: true, dismissAfterMs: 3000 }),
+            addToast({ type: 'info', message, autoDismiss: true, dismissAfterMs: 20000 }),
         [addToast],
     );
 

@@ -42,7 +42,9 @@ const MenuWrapper = styled('div')(
     }
 `,
 );
-const LinkButton = styled(Link)<{
+const LinkButton = styled(Link, {
+    shouldForwardProp: (prop) => !(typeof prop === 'string' && prop.startsWith('$')),
+})<{
     $sidebarToggle?: boolean;
     $isActive?: boolean;
 }>(
@@ -77,7 +79,9 @@ const LinkButton = styled(Link)<{
     }
   `,
 );
-const LinkButtonText = styled('div')<{ $sidebarToggle?: boolean }>(
+const LinkButtonText = styled('div', {
+    shouldForwardProp: (prop) => !(typeof prop === 'string' && prop.startsWith('$')),
+})<{ $sidebarToggle?: boolean }>(
     ({ $sidebarToggle }) => `
     font-size: 14px;
     font-weight: 500;

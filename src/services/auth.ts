@@ -1,4 +1,5 @@
 import { apiFetch } from '@/lib/apiFetch';
+import { queryClient } from '@/lib/queryClient';
 import { useAuthStore } from '@/stores/authStore';
 import { EnterOtpTokenResponse } from '@/types/auth';
 import { useMutation } from '@tanstack/react-query';
@@ -64,6 +65,8 @@ export function useLoginMutation() {
         },
         onSuccess: ({ user, access_token }) => {
             useAuthStore.getState().setCredentials({ user, access_token });
+            // Invalidate permissions cache so it re-fetches with the new token
+            queryClient.invalidateQueries({ queryKey: ['permissions', 'me'] });
         },
     });
 }

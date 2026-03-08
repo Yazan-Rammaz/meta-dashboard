@@ -8,13 +8,14 @@ export interface Permission {
     created_at: string;
 }
 
-export function useGetpermissionsQuery() {
+export function useGetpermissionsQuery(options?: { enabled?: boolean }) {
     return useQuery({
         queryKey: ['permissions', 'me'],
         queryFn: async () => {
             const result = await apiFetch<{ data: Permission[] }>('/users/me/permissions');
             return result?.data ?? [];
         },
+        enabled: options?.enabled ?? true,
     });
 }
 
