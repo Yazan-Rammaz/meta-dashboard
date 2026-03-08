@@ -1,15 +1,18 @@
-import { notifyError } from '@/contexts/toastContext';
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 
 export const queryClient = new QueryClient({
     queryCache: new QueryCache({
         onError: (error) => {
-            notifyError(error.message);
+            // Errors are already handled by apiFetch with detailed messages
+            // Just log to console for debugging
+            console.error('Query error:', error);
         },
     }),
     mutationCache: new MutationCache({
         onError: (error) => {
-            notifyError(error.message);
+            // Errors are already handled by apiFetch with detailed messages
+            // Just log to console for debugging
+            console.error('Mutation error:', error);
         },
     }),
     defaultOptions: {

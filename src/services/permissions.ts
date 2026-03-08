@@ -12,7 +12,9 @@ export function useGetpermissionsQuery(options?: { enabled?: boolean }) {
     return useQuery({
         queryKey: ['permissions', 'me'],
         queryFn: async () => {
-            const result = await apiFetch<{ data: Permission[] }>('/users/me/permissions');
+            const result = await apiFetch<{ data: Permission[] }>('/users/me/permissions', {
+                silent: true, // Don't show toast for permission check errors
+            });
             return result?.data ?? [];
         },
         enabled: options?.enabled ?? true,

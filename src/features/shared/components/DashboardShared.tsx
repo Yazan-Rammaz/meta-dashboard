@@ -121,7 +121,7 @@ export const TopNav = ({
                     <span>
                         <Translated />
                     </span>
-                    <div className="lang-items">
+                    <div className="lang-items" suppressHydrationWarning>
                         {isLoadingLanguages ? (
                             <SuspenseLoader />
                         ) : (

@@ -20,13 +20,14 @@ type ApiFetchOptions = {
     method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
     body?: unknown;
     headers?: Record<string, string>;
+    silent?: boolean; // Don't show toast notifications for errors
 };
 
 export async function apiFetch<T>(
     path: string,
     options: ApiFetchOptions = {},
 ): Promise<T | undefined> {
-    const { method = 'GET', body, headers: extraHeaders = {} } = options;
+    const { method = 'GET', body, headers: extraHeaders = {}, silent = false } = options;
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
     const url = `${baseUrl}/${path.replace(/^\//, '')}`;
 
@@ -70,19 +71,23 @@ export async function apiFetch<T>(
             data = null;
         }
 
+        const cleanPath = path.replace(/^\//, '');
         const message = (data as { message?: string })?.message ?? `HTTP ${res.status}`;
+        const detailedMessage = `[${cleanPath}] ${message}`;
 
         if (res.status === 401 && typeof window !== 'undefined') {
             const { useAuthStore } = await import('@/stores/authStore');
             useAuthStore.getState().logout();
-            const { notifyError } = await import('@/contexts/toastContext');
-            notifyError(message);
+            if (!silent) {
+                const { notifyError } = await import('@/contexts/toastContext');
+                notifyError(detailedMessage);
+            }
             return undefined;
         }
 
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && !silent) {
             const { notifyError } = await import('@/contexts/toastContext');
-            notifyError(message);
+            notifyError(detailedMessage);
         }
 
         throw new ApiFetchError(message, res.status, data);
