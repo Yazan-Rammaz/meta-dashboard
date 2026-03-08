@@ -1,27 +1,27 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['res.cloudinary.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
   },
   env: {
-    REACT_APP_BASE_URL: process.env.REACT_APP_BASE_URL,
-    REACT_APP_CLOUD_URL: process.env.REACT_APP_CLOUD_URL,
-    REACT_APP_BRAND_ICON_PATH: process.env.REACT_APP_BRAND_ICON_PATH,
-    REACT_APP_CATEGORY_ICON_PATH: process.env.REACT_APP_CATEGORY_ICON_PATH,
-    REACT_APP_BOUTIQUE_ICON_PATH: process.env.REACT_APP_BOUTIQUE_ICON_PATH,
-    REACT_APP_BOUTIQUE_BANNERS_PATH: process.env.REACT_APP_BOUTIQUE_BANNERS_PATH,
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    NEXT_PUBLIC_CLOUD_URL: process.env.NEXT_PUBLIC_CLOUD_URL,
+    NEXT_PUBLIC_BRAND_ICON_PATH: process.env.NEXT_PUBLIC_BRAND_ICON_PATH,
+    NEXT_PUBLIC_CATEGORY_ICON_PATH: process.env.NEXT_PUBLIC_CATEGORY_ICON_PATH,
+    NEXT_PUBLIC_BOUTIQUE_ICON_PATH: process.env.NEXT_PUBLIC_BOUTIQUE_ICON_PATH,
+    NEXT_PUBLIC_BOUTIQUE_BANNERS_PATH: process.env.NEXT_PUBLIC_BOUTIQUE_BANNERS_PATH,
   },
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      'src': require('path').resolve(__dirname, 'src'),
-    };
-    return config;
+  turbopack: {
+    root: __dirname,
   },
   // Disable source maps in production to prevent 404 errors for map files
   productionBrowserSourceMaps: false,
   reactStrictMode: true,
-  swcMinify: true,
   // Add rewrites to handle client-side routing
   async rewrites() {
     return [

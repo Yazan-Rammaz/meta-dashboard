@@ -1,9 +1,8 @@
+import { useUploadStore } from '@/stores/uploadStore';
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { selectCurrentUploads } from '@/features/upload/uploadSlice';
 
 export const useUploadProgress = () => {
-  const uploads = useSelector(selectCurrentUploads);
+    const uploads = useUploadStore((s) => s.uploads);
 
-  return useMemo(() => ({ uploads }), [uploads]);
+    return useMemo(() => ({ uploads }), [uploads]);
 };

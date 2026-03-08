@@ -1,10 +1,12 @@
 # Meta Whatsapp Admin Dashboard - Next.js Migration
 
-This project has been successfully migrated from Create React App (CRA) to Next.js 14 with App Router.
+This project has been successfully migrated from Create React App (CRA) to
+Next.js 14 with App Router.
 
 ## Migration Summary
 
 ### What Changed:
+
 - ✅ **Framework**: Migrated from CRA to Next.js 14 with App Router
 - ✅ **React Version**: Upgraded from React 17 to React 18
 - ✅ **Routing**: Converted from React Router to Next.js App Router
@@ -14,6 +16,7 @@ This project has been successfully migrated from Create React App (CRA) to Next.
 - ✅ **Performance**: Improved with Next.js optimizations
 
 ### File Structure Changes:
+
 ```
 src/
 ├── app/                    # Next.js App Router
@@ -31,6 +34,7 @@ src/
 ```
 
 ### Key Features Preserved:
+
 - 🔐 **Authentication**: JWT-based auth with Redux Toolkit
 - 🎨 **UI Library**: Material-UI v5 with custom theming
 - 🌍 **Internationalization**: Multi-language support (EN/AR/TR)
@@ -42,10 +46,12 @@ src/
 ## Getting Started
 
 ### Prerequisites:
-- Node.js 18+ 
+
+- Node.js 18+
 - npm or yarn
 
 ### Installation:
+
 ```bash
 # Install dependencies
 npm install
@@ -61,12 +67,15 @@ npm start
 ```
 
 ### Environment Variables:
+
 Create a `.env.local` file:
+
 ```env
-REACT_APP_BASE_URL=your_api_base_url
+NEXT_PUBLIC_BASE_URL=your_api_base_url
 ```
 
 ## Development Commands:
+
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run start` - Start production server
@@ -74,6 +83,7 @@ REACT_APP_BASE_URL=your_api_base_url
 - `npm run format` - Format code with Prettier
 
 ## Migration Benefits:
+
 1. **Better Performance**: Next.js optimizations and automatic code splitting
 2. **SEO Friendly**: Server-side rendering capabilities
 3. **Modern Architecture**: App Router with React 18 features
@@ -81,6 +91,7 @@ REACT_APP_BASE_URL=your_api_base_url
 5. **Production Ready**: Optimized builds and deployment options
 
 ## Notes:
+
 - All existing functionality has been preserved
 - Components are now SSR-compatible
 - LocalStorage access is properly handled for SSR
@@ -88,4 +99,6 @@ REACT_APP_BASE_URL=your_api_base_url
 - Material-UI theming continues to work as before
 
 ## Support:
-For any issues or questions about the migration, please refer to the Next.js documentation or contact the development team.
+
+For any issues or questions about the migration, please refer to the Next.js
+documentation or contact the development team.

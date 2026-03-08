@@ -3,6 +3,11 @@
 # dependencies
 /node_modules
 /.pnp
+/.vscode/*
+/.claude/*
+/.specify/*
+/specs/*
+/.history/*
 .pnp.js
 
 # testing

@@ -60,7 +60,8 @@ const RelativeInputParent = styled('div')(
 
 function EnterToken({ user, session_token, setIdToken }: EnterTokenProps) {
   const [pinValue, setPinValue] = useState('');
-  const [check, { isLoading: isCheckLoading }] = useEnterOtpTokenMutation();
+  const { mutateAsync: check, isPending: isCheckLoading } =
+    useEnterOtpTokenMutation();
 
   const handleError = () => {
     document.querySelectorAll('.absolute-child').forEach((elem) => {
@@ -110,7 +111,7 @@ function EnterToken({ user, session_token, setIdToken }: EnterTokenProps) {
                 session_token: session_token,
                 token: value,
                 username: user.username
-              }).unwrap();
+              });
               document.querySelectorAll('.absolute-child').forEach((elem) => {
                 elem.classList.add('green-background');
               });

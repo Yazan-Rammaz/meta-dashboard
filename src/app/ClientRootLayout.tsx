@@ -1,29 +1,12 @@
 'use client';
-import { Inter } from 'next/font/google';
 import Providers from '@/app/providers';
 import ClientLayout from '@/layouts/ClientLayout';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
-
-export default function ClientRootLayout({
-  children
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en">
-      <head>
-        {/* <link
-          href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400&display=swap"
-          rel="stylesheet"
-        /> */}
-      </head>
-      <body className={inter.className}>
+export default function ClientRootLayout({ children }: { children: React.ReactNode }) {
+    return (
         <Providers>
-          <ClientLayout>{children}</ClientLayout>
+            <ClientLayout>{children}</ClientLayout>
         </Providers>
-      </body>
-    </html>
-  );
+    );
 }
