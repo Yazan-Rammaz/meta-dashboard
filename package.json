@@ -73,7 +73,7 @@
     ]
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.15.1",
+    "@cloudflare/next-on-pages": "^1",
     "@tanstack/react-query-devtools": "^5.91.3",
     "@types/node": "^25.3.5",
     "@types/nprogress": "^0.2.3",
