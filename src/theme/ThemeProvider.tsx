@@ -1,6 +1,7 @@
+'use client';
+
 import { themeCreator } from '@/theme/base';
-import { ThemeProvider } from '@mui/material';
-import { StylesProvider } from '@mui/styles';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { createContext, ReactNode, useEffect, useState } from 'react';
 
 export const ThemeContext = createContext((themeName: string): void => {
@@ -25,11 +26,11 @@ const ThemeProviderWrapper: React.FC<{ children: ReactNode }> = (props) => {
     };
 
     return (
-        <StylesProvider injectFirst>
+        <StyledEngineProvider injectFirst>
             <ThemeContext.Provider value={setThemeName}>
                 <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
             </ThemeContext.Provider>
-        </StylesProvider>
+        </StyledEngineProvider>
     );
 };
 
