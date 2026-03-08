@@ -18,6 +18,7 @@ type = "javascript"
 
 # 4- npm install -D wrangler npx wrangler login
 
+
 # 5- test locally: 
 #       npm run build
 #       npm run opennext:build
