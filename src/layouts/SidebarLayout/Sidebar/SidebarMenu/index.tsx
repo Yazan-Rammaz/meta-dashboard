@@ -8,7 +8,6 @@ import InfoIcon from '@/ui/icons/Info';
 import LinksIcon from '@/ui/icons/Links';
 import UsersIcon, { default as ClientsIcon } from '@/ui/icons/user.svg'; // Import the new UsersIcon
 import CanCall from '@/utils/ability';
-import useTrans from '@/utils/translation_util';
 import { styled } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -252,8 +251,6 @@ interface SidebarMenuItemProps {
 }
 
 function SidebarMenuItem({ item, renderIcon, sidebarToggle, isActive }: SidebarMenuItemProps) {
-    const trans = useTrans();
-
     const menuItem = (
         <LinkButton
             href={item.link}
@@ -264,7 +261,7 @@ function SidebarMenuItem({ item, renderIcon, sidebarToggle, isActive }: SidebarM
             }}
         >
             {renderIcon(item.icon, isActive, item.id)}
-            <LinkButtonText $sidebarToggle={sidebarToggle}>{trans(item.label)}</LinkButtonText>
+            <LinkButtonText $sidebarToggle={sidebarToggle}>{item.label}</LinkButtonText>
         </LinkButton>
     );
 

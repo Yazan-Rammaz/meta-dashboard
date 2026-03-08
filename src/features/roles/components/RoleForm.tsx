@@ -10,7 +10,6 @@ import Input from '@/ui/Input';
 import ModalBody from '@/ui/Modal/ModalBody';
 import ModalSection from '@/ui/ModalSection';
 import AsyncMultiSelect from '@/ui/MultiSelect';
-import useTrans from '@/utils/translation_util';
 import { useEffect, useState, useTransition } from 'react';
 
 interface Props {
@@ -27,7 +26,6 @@ interface SelectedPermissionElement {
 }
 
 export default function RoleForm({ currentData, setCurrentData, mode, onClose }: Props) {
-    const trans = useTrans();
     const { showSuccess, showError } = useToast();
     const [isPending, startTransition] = useTransition();
     const { data: allPermissions, isLoading: isLoadingAllPermissions } = useGetpermissionsQuery();
@@ -54,10 +52,10 @@ export default function RoleForm({ currentData, setCurrentData, mode, onClose }:
     return (
         <ModalBody>
             <>
-                <ModalSection title={trans('Role Title & Name')}>
+                <ModalSection title={'Role Title & Name'}>
                     <>
                         <Input
-                            title={trans('Name')}
+                            title={'Name'}
                             size={4}
                             value={currentData.name || ''}
                             disabled={mode === 'preview'}
@@ -157,7 +155,7 @@ export default function RoleForm({ currentData, setCurrentData, mode, onClose }:
               ))} */}
                     </>
                 </ModalSection>
-                <ModalSection title={trans('Role Permissions')}>
+                <ModalSection title={'Role Permissions'}>
                     <AsyncMultiSelect
                         clear={() => {
                             setSelectedPermission([]);
@@ -224,7 +222,7 @@ export default function RoleForm({ currentData, setCurrentData, mode, onClose }:
                 </ModalSection>
                 {mode !== 'preview' ? (
                     <ModalActionButton
-                        text={mode === 'add' ? trans('Add Role') : trans('Edit Role')}
+                        text={mode === 'add' ? 'Add Role' : 'Edit Role'}
                         disabled={isPending}
                         loading={isPending}
                         onClick={() => {
@@ -238,11 +236,11 @@ export default function RoleForm({ currentData, setCurrentData, mode, onClose }:
                                         queryClient.invalidateQueries({ queryKey: [k] }),
                                     );
                                     showSuccess(
-                                        trans(mode === 'add' ? 'Role saved' : 'Role updated'),
+                                        mode === 'add' ? 'Role saved' : 'Role updated'
                                     );
                                     onClose();
                                 } else {
-                                    showError(result.error ?? trans('Failed'));
+                                    showError(result.error ?? 'Failed');
                                 }
                             });
                         }}

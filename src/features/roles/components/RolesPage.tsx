@@ -14,12 +14,10 @@ import { queryClient } from '@/lib/queryClient';
 import type { PaginatedResponse } from '@/models/pagination';
 import { Role } from '@/models/roles';
 import { useGetRolesInfiniteQuery, useGetRolesQuery } from '@/services/roles';
+import { useViewModeStore } from '@/stores/viewModeStore';
 import HRMIcon from '@/ui/icons/HRM.svg';
 import ModalComponent from '@/ui/Modal';
 import ModalHeader from '@/ui/Modal/ModalHeader';
-import useTrans from '@/utils/translation_util';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import {
     Button,
     Dialog,
@@ -54,7 +52,6 @@ const roleTableColumns: TableColumn<Role>[] = [
 ];
 
 function HRM({ initialData }: Props) {
-    const trans = useTrans();
     const { showSuccess, showError } = useToast();
     const [isPending, startTransition] = useTransition();
     const [page, setPage] = useState<number>(1);
@@ -73,7 +70,8 @@ function HRM({ initialData }: Props) {
     const [open, setOpen] = useState<boolean>(false);
     const [mode, setMode] = useState<'add' | 'update' | 'preview'>('preview');
     const [currentData, setCurrentData] = useState<Role>(initialState);
-    const [viewMode, setViewMode] = useState<'list' | 'table'>('list');
+    const viewMode = useViewModeStore((state) => state.mode);
+    const setViewMode = useViewModeStore((state) => state.setMode);
     const [openConfirm, setOpenConfirm] = useState<boolean>(false);
     const [roleToDelete, setRoleToDelete] = useState<Role | null>(null);
 
@@ -105,11 +103,11 @@ function HRM({ initialData }: Props) {
                 const result = await deleteRoleAction(id);
                 if (result.success) {
                     queryClient.invalidateQueries({ queryKey: ['roles'] });
-                    showSuccess(trans('Role deleted'));
+                    showSuccess('Role deleted');
                     setOpen(false);
                     setCurrentData(initialState);
                 } else {
-                    showError(result.error ?? trans('Failed'));
+                    showError(result.error ?? 'Failed');
                 }
             });
         }
@@ -123,39 +121,25 @@ function HRM({ initialData }: Props) {
     return (
         <>
             <Helmet>
-                <title>{trans('Roles')}</title>
+                <title>Roles</title>
             </Helmet>
             <TopNav
                 add_permission=""
                 table_icon={HRMIcon}
-                table_name={trans('Roles')}
+                table_name="Roles"
                 top_name_clk={() => {}}
                 open_button_clk={() => {
                     setCurrentData(initialState);
                     setMode('add');
                     setOpen(true);
                 }}
+                onFilterClick={() => handleViewModeChange('list')}
+                onApplicationClick={() => handleViewModeChange('table')}
+                activeViewMode={viewMode}
                 haveView={false}
             />
             {isPending ? <SuspenseLoader /> : <></>}
             <div style={{ padding: '70px 20px 20px 20px' }}>
-                <div style={{ marginBottom: '20px', textAlign: 'right' }}>
-                    <Button
-                        onClick={() => handleViewModeChange('list')}
-                        variant={viewMode === 'list' ? 'contained' : 'outlined'}
-                        startIcon={<ViewListIcon />}
-                    >
-                        List View
-                    </Button>
-                    <Button
-                        onClick={() => handleViewModeChange('table')}
-                        variant={viewMode === 'table' ? 'contained' : 'outlined'}
-                        startIcon={<ViewModuleIcon />}
-                        style={{ marginLeft: '10px' }}
-                    >
-                        Table View
-                    </Button>
-                </div>
                 {isLoadingRoles ? (
                     <SuspenseLoader />
                 ) : viewMode === 'list' ? (
@@ -227,9 +211,7 @@ function HRM({ initialData }: Props) {
                                     setCurrentData(initialState);
                                 }}
                                 title={
-                                    currentData?.name
-                                        ? `${trans('Role')}: ${currentData.name}`
-                                        : trans('Role')
+                                    currentData?.name ? `${'Role'}: ${currentData.name}` : 'Role'
                                 }
                                 mode={mode}
                                 icon={<></>}
@@ -273,17 +255,17 @@ function HRM({ initialData }: Props) {
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">{trans('Confirm Delete')}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">{'Confirm Delete'}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            {trans(
-                                `Are you sure you want to delete role "${roleToDelete?.name || roleToDelete?.title}"? This action cannot be undone.`,
-                            )}
+                            `Are you sure you want to delete role "$
+                            {roleToDelete?.name || roleToDelete?.title}"? This action cannot be
+                            undone.`,
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCloseConfirm} color="primary">
-                            {trans('Cancel')}
+                            {'Cancel'}
                         </Button>
                         <Button
                             onClick={handleConfirmDelete}
@@ -291,7 +273,7 @@ function HRM({ initialData }: Props) {
                             autoFocus
                             disabled={isPending}
                         >
-                            {trans('Delete')}
+                            {'Delete'}
                         </Button>
                     </DialogActions>
                 </Dialog>

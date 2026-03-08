@@ -14,12 +14,10 @@ import { queryClient } from '@/lib/queryClient';
 import type { PaginatedResponse } from '@/models/pagination';
 import { User } from '@/models/users';
 import { useGetUsersInfiniteQuery, useGetUsersQuery } from '@/services/users';
+import { useViewModeStore } from '@/stores/viewModeStore';
 import UsersIcon from '@/ui/icons/user.svg';
 import ModalComponent from '@/ui/Modal';
 import ModalHeader from '@/ui/Modal/ModalHeader';
-import useTrans from '@/utils/translation_util';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import {
     Button,
     Dialog,
@@ -53,7 +51,6 @@ const userTableColumns: TableColumn<User>[] = [
 ];
 
 function Users({ initialData }: Props) {
-    const trans = useTrans();
     const { showSuccess, showError } = useToast();
     const [isPending, startTransition] = useTransition();
     const [page, setPage] = useState<number>(1);
@@ -72,7 +69,8 @@ function Users({ initialData }: Props) {
     const [open, setOpen] = useState<boolean>(false);
     const [mode, setMode] = useState<'add' | 'update' | 'preview'>('preview');
     const [currentData, setCurrentData] = useState<User>(initialState);
-    const [viewMode, setViewMode] = useState<'list' | 'table'>('list');
+    const viewMode = useViewModeStore((state) => state.mode);
+    const setViewMode = useViewModeStore((state) => state.setMode);
     const [openConfirm, setOpenConfirm] = useState<boolean>(false);
     const [userToDelete, setUserToDelete] = useState<User | null>(null);
 
@@ -104,11 +102,11 @@ function Users({ initialData }: Props) {
                 const result = await deleteUserAction(id);
                 if (result.success) {
                     queryClient.invalidateQueries({ queryKey: ['users'] });
-                    showSuccess(trans('User deleted'));
+                    showSuccess('User deleted');
                     setOpen(false);
                     setCurrentData(initialState);
                 } else {
-                    showError(result.error ?? trans('Failed'));
+                    showError(result.error ?? 'Failed');
                 }
             });
         }
@@ -122,40 +120,25 @@ function Users({ initialData }: Props) {
     return (
         <>
             <Helmet>
-                <title>{trans('Users')}</title>
+                <title>{'Users'}</title>
             </Helmet>
             <TopNav
                 add_permission=""
                 table_icon={UsersIcon}
-                table_name={trans('Users')}
+                table_name={'Users'}
                 top_name_clk={() => {}}
                 open_button_clk={() => {
                     setCurrentData(initialState);
                     setMode('add');
                     setOpen(true);
                 }}
+                onFilterClick={() => handleViewModeChange('list')}
+                onApplicationClick={() => handleViewModeChange('table')}
+                activeViewMode={viewMode}
                 haveView={false}
             />
             {isPending ? <SuspenseLoader /> : <></>}
             <div style={{ padding: '70px 20px 20px 20px' }}>
-                <div style={{ marginBottom: '20px', textAlign: 'right' }}>
-                    <Button
-                        onClick={() => handleViewModeChange('list')}
-                        variant={viewMode === 'list' ? 'contained' : 'outlined'}
-                        startIcon={<ViewListIcon />}
-                    >
-                        List View
-                    </Button>
-                    <Button
-                        onClick={() => handleViewModeChange('table')}
-                        variant={viewMode === 'table' ? 'contained' : 'outlined'}
-                        startIcon={<ViewModuleIcon />}
-                        style={{ marginLeft: '10px' }}
-                    >
-                        Table View
-                    </Button>
-                </div>
-
                 {isLoadingUsers ? (
                     <SuspenseLoader />
                 ) : viewMode === 'list' ? (
@@ -228,9 +211,7 @@ function Users({ initialData }: Props) {
                                     setCurrentData(initialState);
                                 }}
                                 title={
-                                    currentData?.name
-                                        ? `${trans('User')}: ${currentData.name}`
-                                        : trans('User')
+                                    currentData?.name ? `${'User'}: ${currentData.name}` : 'User'
                                 }
                                 mode={mode}
                                 icon={<></>}
@@ -274,17 +255,16 @@ function Users({ initialData }: Props) {
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">{trans('Confirm Delete')}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">{'Confirm Delete'}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            {trans(
-                                `Are you sure you want to delete user "${userToDelete?.name}"? This action cannot be undone.`,
-                            )}
+                            `Are you sure you want to delete user "${userToDelete?.name}"? This
+                            action cannot be undone.`,
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCloseConfirm} color="primary">
-                            {trans('Cancel')}
+                            {'Cancel'}
                         </Button>
                         <Button
                             onClick={handleConfirmDelete}
@@ -292,7 +272,7 @@ function Users({ initialData }: Props) {
                             autoFocus
                             disabled={isPending}
                         >
-                            {trans('Delete')}
+                            {'Delete'}
                         </Button>
                     </DialogActions>
                 </Dialog>

@@ -1,49 +1,47 @@
-import React from 'react';
 import { styled } from '@mui/material';
-import useTrans from '@/utils/translation_util';
 
 interface LoginOptionsProps {
-  logout: () => void;
+    logout: () => void;
 }
 
 const OptionsContainer = styled('div')(
-  () => `
+    () => `
     align-items: center;
     display: flex;
     justify-content: center;
     bottom: 0;
     position: absolute;
     width: 100%;
-`
+`,
 );
 const ClearLogin = styled('div')(
-  () => `
+    () => `
     align-items: center;
     display: flex;
     justify-content: center;
     cursor: pointer;
-`
+`,
 );
 const ChangeUser = styled('div')(
-  () => `
+    () => `
     align-items: center;
     display: flex;
     justify-content: center;
     margin-left: 30px;
     margin-right: 30px;
     cursor: pointer;
-`
+`,
 );
 const ForgetPassword = styled('div')(
-  () => `
+    () => `
     align-items: center;
     display: flex;
     justify-content: center;
     cursor: pointer;
-`
+`,
 );
 const OptionText = styled('div')(
-  () => `
+    () => `
     bottom: -19px;
     font-size: 10px;
     letter-spacing: .025em;
@@ -55,32 +53,26 @@ const OptionText = styled('div')(
     white-space: nowrap;
     transition: .3s;
 }
-`
+`,
 );
 
 function LoginOptions({ logout }: LoginOptionsProps) {
-  return (
-    <OptionsContainer>
-      <ClearLogin className="clear_login_component" onClick={logout}>
-        <div className="clear_login_icon" />
-        <OptionText className="clear_login_text">
-          {useTrans()('Clear Login')}
-        </OptionText>
-      </ClearLogin>
-      <ChangeUser className="change_user_component" onClick={logout}>
-        <div className="change_user_icon" />
-        <OptionText className="change_user_text">
-          {useTrans()('Change User')}
-        </OptionText>
-      </ChangeUser>
-      <ForgetPassword className="forget_password_component">
-        <div className="forget_password_icon" />
-        <OptionText className="forget_password_text">
-          {useTrans()('Forget Password')}
-        </OptionText>
-      </ForgetPassword>
-    </OptionsContainer>
-  );
+    return (
+        <OptionsContainer>
+            <ClearLogin className="clear_login_component" onClick={logout}>
+                <div className="clear_login_icon" />
+                <OptionText className="clear_login_text">{'Clear Login'}</OptionText>
+            </ClearLogin>
+            <ChangeUser className="change_user_component" onClick={logout}>
+                <div className="change_user_icon" />
+                <OptionText className="change_user_text">{'Change User'}</OptionText>
+            </ChangeUser>
+            <ForgetPassword className="forget_password_component">
+                <div className="forget_password_icon" />
+                <OptionText className="forget_password_text">{'Forget Password'}</OptionText>
+            </ForgetPassword>
+        </OptionsContainer>
+    );
 }
 
 export default LoginOptions;

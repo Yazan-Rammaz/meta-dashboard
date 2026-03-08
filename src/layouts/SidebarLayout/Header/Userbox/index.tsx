@@ -5,9 +5,6 @@ import { useContext, useRef, useState } from 'react';
 
 import { TranslationContext } from '@/contexts/appLangContext';
 import { useAuth } from '@/hooks/useAuth';
-import { useGetlanguagesQuery } from '@/services/languages';
-import SelectShort from '@/ui/SelectShort';
-import useTrans from '@/utils/translation_util';
 import { Lock } from '@mui/icons-material';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
@@ -43,7 +40,6 @@ const UserBoxDescription = styled(Typography)(
 
 function HeaderUserbox() {
     const { user } = useAuth();
-    const { data: Languages } = useGetlanguagesQuery({ staleTime: Infinity });
     const isMdDown = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
     const isSmDown = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
@@ -72,9 +68,7 @@ function HeaderUserbox() {
                         <UserBoxLabel variant="body1">{user?.name}</UserBoxLabel>
                     </UserBoxText>
                 )}
-                {!isSmDown && (
-                    <ExpandMoreTwoToneIcon sx={{ ml: 1 }} />
-                )}
+                {!isSmDown && <ExpandMoreTwoToneIcon sx={{ ml: 1 }} />}
             </Button>
             <Popover
                 anchorEl={ref.current}
@@ -97,24 +91,6 @@ function HeaderUserbox() {
                     </UserBoxText>
                 </MenuUserBox>
                 <Box sx={{ m: 1 }}>
-                    <SelectShort
-                        disabled={false}
-                        items={
-                            Languages?.map((one) => {
-                                return {
-                                    id: one.language_code,
-                                    title: one.language_code,
-                                };
-                            }) ?? []
-                        }
-                        onSelect={(item: string | number | null) => {
-                            changeLanguage(item as string);
-                        }}
-                        selected={language_code}
-                        justify="center"
-                    />
-                </Box>
-                <Box sx={{ m: 1 }}>
                     <Button
                         color="primary"
                         fullWidth
@@ -123,7 +99,7 @@ function HeaderUserbox() {
                         }}
                     >
                         <Lock sx={{ mr: 1 }} />
-                        {useTrans()('Lock')}
+                        {'Lock'}
                     </Button>
                 </Box>
                 <Box sx={{ m: 1 }}>
@@ -138,7 +114,7 @@ function HeaderUserbox() {
                         }}
                     >
                         <LockOpenTwoToneIcon sx={{ mr: 1 }} />
-                        {useTrans()('SignOut')}
+                        SignOut
                     </Button>
                 </Box>
             </Popover>

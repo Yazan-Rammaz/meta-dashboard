@@ -8,7 +8,6 @@ import ModalActionButton from '@/ui/Button/modalActionButton';
 import Input from '@/ui/Input';
 import ModalBody from '@/ui/Modal/ModalBody';
 import ModalSection from '@/ui/ModalSection';
-import useTrans from '@/utils/translation_util';
 import { useTransition } from 'react';
 
 interface Props {
@@ -19,18 +18,17 @@ interface Props {
 }
 
 export default function ClientForm({ currentData, setCurrentData, mode, onClose }: Props) {
-    const trans = useTrans();
     const { showSuccess, showError } = useToast();
     const [isPending, startTransition] = useTransition();
 
     return (
         <ModalBody>
             <>
-                <ModalSection title={trans('Client Details')}>
+                <ModalSection title={'Client Details'}>
                     <>
                         <Input
                             size={4}
-                            title={trans('Name')}
+                            title={'Name'}
                             value={currentData.name || ''}
                             disabled={mode === 'preview'}
                             clear={() => {
@@ -49,7 +47,7 @@ export default function ClientForm({ currentData, setCurrentData, mode, onClose 
                         />
                         <Input
                             size={4}
-                            title={trans('Display Phone Number')}
+                            title={'Display Phone Number'}
                             value={currentData.display_phone_number || ''}
                             disabled={mode === 'preview'}
                             clear={() => {
@@ -68,7 +66,7 @@ export default function ClientForm({ currentData, setCurrentData, mode, onClose 
                         />
                         <Input
                             size={4}
-                            title={trans('Phone Number ID')}
+                            title={'Phone Number ID'}
                             value={currentData.phone_number_id || ''}
                             disabled={mode === 'preview'}
                             clear={() => {
@@ -87,7 +85,7 @@ export default function ClientForm({ currentData, setCurrentData, mode, onClose 
                         />
                         <Input
                             size={4}
-                            title={trans('WhatsApp Business ID')}
+                            title={'WhatsApp Business ID'}
                             value={currentData.whatsapp_business_id || ''}
                             disabled={mode === 'preview'}
                             clear={() => {
@@ -106,7 +104,7 @@ export default function ClientForm({ currentData, setCurrentData, mode, onClose 
                         />
                         <Input
                             size={4}
-                            title={trans('Webhook URL')}
+                            title={'Webhook URL'}
                             value={currentData.webhook_url || ''}
                             disabled={mode === 'preview'}
                             clear={() => {
@@ -125,7 +123,7 @@ export default function ClientForm({ currentData, setCurrentData, mode, onClose 
                         />
                         <Input
                             size={4}
-                            title={trans('Rate Limit Per Minute')}
+                            title={'Rate Limit Per Minute'}
                             value={currentData.rate_limit_per_minute?.toString() || ''}
                             disabled={mode === 'preview'}
                             clear={() => {
@@ -144,7 +142,7 @@ export default function ClientForm({ currentData, setCurrentData, mode, onClose 
                         />
                         <Input
                             size={4}
-                            title={trans('Status')}
+                            title={'Status'}
                             value={currentData.status || ''}
                             disabled={mode === 'preview'}
                             clear={() => {
@@ -165,7 +163,7 @@ export default function ClientForm({ currentData, setCurrentData, mode, onClose 
                 </ModalSection>
                 {mode !== 'preview' ? (
                     <ModalActionButton
-                        text={mode === 'add' ? trans('Add Client') : trans('Edit Client')}
+                        text={mode === 'add' ? 'Add Client' : 'Edit Client'}
                         disabled={isPending}
                         loading={isPending}
                         onClick={() => {
@@ -180,12 +178,10 @@ export default function ClientForm({ currentData, setCurrentData, mode, onClose 
                                     result.invalidateKeys?.forEach((k) =>
                                         queryClient.invalidateQueries({ queryKey: [k] }),
                                     );
-                                    showSuccess(
-                                        trans(mode === 'add' ? 'Client saved' : 'Client updated'),
-                                    );
+                                    showSuccess(mode === 'add' ? 'Client saved' : 'Client updated');
                                     onClose();
                                 } else {
-                                    showError(result.error ?? trans('Failed'));
+                                    showError(result.error ?? 'Failed');
                                 }
                             });
                         }}

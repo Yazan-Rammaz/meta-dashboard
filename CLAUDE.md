@@ -151,18 +151,6 @@ Feature pages support two view modes with different pagination strategies:
   permissions fetched from `/users/me/permissions`.
 - `SUPER_ADMIN` permission bypasses all checks.
 
-### Translation System
-
-- `useTrans()` hook (`src/utils/translation_util.tsx`) returns a
-  `(key: string) => string` function.
-- Translations are in `src/utils/translations.json`, keyed by language code.
-- Language preference is stored in `localStorage` under `app_lang`.
-- The `TranslationContext` (from `src/contexts/appLangContext.tsx`) is what
-  `useTrans()` reads from.
-- Note: there are two translation contexts — `appLangContext` (used by
-  `useTrans()`) and `translationContext` (used in `DashboardShared`). Both sync
-  with the same `localStorage` key.
-
 ### Feature Page Pattern
 
 Each feature in `src/features/<name>/components/` follows this pattern:

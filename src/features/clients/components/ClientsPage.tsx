@@ -14,12 +14,10 @@ import { queryClient } from '@/lib/queryClient';
 import { Client } from '@/models/clients';
 import type { PaginatedResponse } from '@/models/pagination';
 import { useGetClientsInfiniteQuery, useGetClientsQuery } from '@/services/clients';
+import { useViewModeStore } from '@/stores/viewModeStore';
 import ClientsIcon from '@/ui/icons/user.svg';
 import ModalComponent from '@/ui/Modal';
 import ModalHeader from '@/ui/Modal/ModalHeader';
-import useTrans from '@/utils/translation_util';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import {
     Button,
     Dialog,
@@ -64,7 +62,6 @@ const clientTableColumns: TableColumn<Client>[] = [
 ];
 
 function Clients({ initialData }: Props) {
-    const trans = useTrans();
     const { showError } = useToast();
     const [isPending, startTransition] = useTransition();
 
@@ -83,7 +80,8 @@ function Clients({ initialData }: Props) {
     const [open, setOpen] = useState<boolean>(false);
     const [mode, setMode] = useState<'add' | 'update' | 'preview'>('preview');
     const [currentData, setCurrentData] = useState<Client>(initialState);
-    const [viewMode, setViewMode] = useState<'list' | 'table'>('list');
+    const viewMode = useViewModeStore((state) => state.mode);
+    const setViewMode = useViewModeStore((state) => state.setMode);
     const [openConfirm, setOpenConfirm] = useState<boolean>(false);
     const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
 
@@ -116,7 +114,7 @@ function Clients({ initialData }: Props) {
                         queryClient.invalidateQueries({ queryKey: [k] }),
                     );
                 } else {
-                    showError(result.error ?? trans('Failed to delete client'));
+                    showError(result.error ?? 'Failed to delete client');
                 }
             });
             setOpenConfirm(false);
@@ -133,40 +131,25 @@ function Clients({ initialData }: Props) {
     return (
         <>
             <Helmet>
-                <title>{trans('Clients')}</title>
+                <title>{'Clients'}</title>
             </Helmet>
             <TopNav
                 add_permission=""
                 table_icon={ClientsIcon}
-                table_name={trans('Clients')}
+                table_name={'Clients'}
                 top_name_clk={() => {}}
                 open_button_clk={() => {
                     setCurrentData(initialState);
                     setMode('add');
                     setOpen(true);
                 }}
+                onFilterClick={() => handleViewModeChange('list')}
+                onApplicationClick={() => handleViewModeChange('table')}
+                activeViewMode={viewMode}
                 haveView={false}
             />
             {isPending ? <SuspenseLoader /> : <></>}
             <div style={{ padding: '70px 20px 20px 20px' }}>
-                <div style={{ marginBottom: '20px', textAlign: 'right' }}>
-                    <Button
-                        onClick={() => handleViewModeChange('list')}
-                        variant={viewMode === 'list' ? 'contained' : 'outlined'}
-                        startIcon={<ViewListIcon />}
-                    >
-                        List View
-                    </Button>
-                    <Button
-                        onClick={() => handleViewModeChange('table')}
-                        variant={viewMode === 'table' ? 'contained' : 'outlined'}
-                        startIcon={<ViewModuleIcon />}
-                        style={{ marginLeft: '10px' }}
-                    >
-                        Table View
-                    </Button>
-                </div>
-
                 {isLoadingClients ? (
                     <SuspenseLoader />
                 ) : viewMode === 'list' ? (
@@ -239,8 +222,8 @@ function Clients({ initialData }: Props) {
                                 }}
                                 title={
                                     currentData?.name
-                                        ? `${trans('Client')}: ${currentData.name}`
-                                        : trans('Client')
+                                        ? `${'Client'}: ${currentData.name}`
+                                        : 'Client'
                                 }
                                 mode={mode}
                                 icon={<></>}
@@ -284,17 +267,16 @@ function Clients({ initialData }: Props) {
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">{trans('Confirm Delete')}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">{'Confirm Delete'}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            {trans(
-                                `Are you sure you want to delete client "${clientToDelete?.name}"? This action cannot be undone.`,
-                            )}
+                            `Are you sure you want to delete client "${clientToDelete?.name}"? This
+                            action cannot be undone.`,
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCloseConfirm} color="primary">
-                            {trans('Cancel')}
+                            {'Cancel'}
                         </Button>
                         <Button
                             onClick={handleConfirmDelete}
@@ -302,7 +284,7 @@ function Clients({ initialData }: Props) {
                             autoFocus
                             disabled={isPending}
                         >
-                            {trans('Delete')}
+                            {'Delete'}
                         </Button>
                     </DialogActions>
                 </Dialog>

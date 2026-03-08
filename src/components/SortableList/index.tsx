@@ -2,7 +2,6 @@ import Scrollbar from '@/components/Scrollbar';
 import Arrange from '@/ui/icons/arrange.js';
 import CloseModalIcon from '@/ui/icons/closeModalIcon.js';
 import ModalIcon from '@/ui/icons/modalIcon.js';
-import useTrans from '@/utils/translation_util';
 import { styled } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { arrayMoveImmutable } from 'array-move';
@@ -180,7 +179,7 @@ export default function SortableListModal({
                     close();
                 }}
             >
-                {useTrans()('Done')}
+                {'Done'}
             </ModalFooter>
         </ModalContainer>
     );

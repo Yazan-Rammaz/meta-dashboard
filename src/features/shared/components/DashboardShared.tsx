@@ -1,16 +1,10 @@
-import SuspenseLoader from '@/components/SuspenseLoader';
 import { SidebarContext } from '@/contexts/SidebarContext';
 import { TranslationContext } from '@/contexts/translationContext';
-import { useGetlanguagesQuery } from '@/services/languages';
 import Application from '@/ui/icons/Application';
 import Filter from '@/ui/icons/Filter';
 import FollowerIcon from '@/ui/icons/FollowerIcon';
-import Search from '@/ui/icons/search';
-import Sort from '@/ui/icons/Sort';
-import Translated from '@/ui/icons/Translated';
 import ToolTip from '@/ui/Tooltip';
 import CanCall from '@/utils/ability';
-import useTrans from '@/utils/translation_util';
 import Image from 'next/image';
 import { JSX, useContext } from 'react';
 
@@ -28,6 +22,9 @@ interface Props {
     haveView?: boolean;
     viewData?: () => JSX.Element | null;
     add_permission?: string;
+    onFilterClick?: () => void;
+    onApplicationClick?: () => void;
+    activeViewMode?: 'list' | 'table';
 }
 export const TopNav = ({
     table_icon,
@@ -39,10 +36,10 @@ export const TopNav = ({
     open_button_clk,
     haveView,
     viewData,
+    onFilterClick,
+    onApplicationClick,
+    activeViewMode,
 }: Props) => {
-    const { data: languages, isLoading: isLoadingLanguages } = useGetlanguagesQuery({
-        staleTime: Infinity,
-    });
     const { language_code, changeLanguage } = useContext(TranslationContext);
     const { sidebarToggle } = useContext(SidebarContext);
 
@@ -112,42 +109,28 @@ export const TopNav = ({
             </div>
 
             <div className="top-options">
-                <div className="top-option">
-                    <span>
-                        <Search />
-                    </span>
-                </div>
-                <div className="top-option langs">
-                    <span>
-                        <Translated />
-                    </span>
-                    <div className="lang-items" suppressHydrationWarning>
-                        {isLoadingLanguages ? (
-                            <SuspenseLoader />
-                        ) : (
-                            languages?.map((language, index) => (
-                                <div
-                                    key={index}
-                                    onClick={() => changeLanguage(language.language_code)}
-                                    className={`lang-item  ${language_code?.toLowerCase() === language.language_code?.toLowerCase() ? 'selected-lang' : ''}`}
-                                >
-                                    {language.language_code.toUpperCase()}
-                                </div>
-                            ))
-                        )}
-                    </div>
-                </div>
-                <div className="top-option">
-                    <span>
-                        <Sort />
-                    </span>
-                </div>
-                <div className="top-option">
+                <div
+                    className="top-option"
+                    onClick={onFilterClick}
+                    title="List View"
+                    style={{
+                        cursor: onFilterClick ? 'pointer' : 'default',
+                        opacity: activeViewMode === 'table' ? 0.5 : 1,
+                    }}
+                >
                     <span>
                         <Filter />
                     </span>
                 </div>
-                <div className="top-option">
+                <div
+                    className="top-option"
+                    onClick={onApplicationClick}
+                    title="Table View"
+                    style={{
+                        cursor: onApplicationClick ? 'pointer' : 'default',
+                        opacity: activeViewMode === 'list' ? 0.5 : 1,
+                    }}
+                >
                     <span>
                         <Application />
                     </span>
@@ -192,7 +175,7 @@ export const TopNav = ({
                     />
                 </svg>
                 <CanCall permission={add_permission}>
-                    <ToolTip text={`${useTrans()('Add')} ${table_name}`}>
+                    <ToolTip text={`Add ${table_name}`}>
                         <svg
                             onClick={() => {
                                 if (open_button_clk) open_button_clk();

@@ -8,7 +8,6 @@ import ModalActionButton from '@/ui/Button/modalActionButton';
 import Input from '@/ui/Input';
 import ModalBody from '@/ui/Modal/ModalBody';
 import ModalSection from '@/ui/ModalSection';
-import useTrans from '@/utils/translation_util';
 import { useTransition } from 'react';
 
 interface Props {
@@ -19,18 +18,17 @@ interface Props {
 }
 
 export default function UserForm({ currentData, setCurrentData, mode, onClose }: Props) {
-    const trans = useTrans();
     const { showSuccess, showError } = useToast();
     const [isPending, startTransition] = useTransition();
 
     return (
         <ModalBody>
             <>
-                <ModalSection title={trans('User Details')}>
+                <ModalSection title={'User Details'}>
                     <>
                         <Input
                             size={4}
-                            title={trans('Name')}
+                            title={'Name'}
                             value={currentData.name || ''}
                             disabled={mode === 'preview'}
                             clear={() => {
@@ -49,7 +47,7 @@ export default function UserForm({ currentData, setCurrentData, mode, onClose }:
                         />
                         <Input
                             size={4}
-                            title={trans('Email')}
+                            title={'Email'}
                             value={currentData.email || ''}
                             disabled={mode === 'preview'}
                             clear={() => {
@@ -69,7 +67,7 @@ export default function UserForm({ currentData, setCurrentData, mode, onClose }:
                         {mode === 'add' && (
                             <Input
                                 size={4}
-                                title={trans('Password')}
+                                title={'Password'}
                                 value={currentData.password || ''}
                                 disabled={false} // Changed from mode === 'preview' to false
                                 clear={() => {
@@ -91,7 +89,7 @@ export default function UserForm({ currentData, setCurrentData, mode, onClose }:
 
                         <Input
                             size={4}
-                            title={trans('Role')}
+                            title={'Role'}
                             value={currentData.role || ''}
                             disabled={mode === 'preview'}
                             clear={() => {
@@ -110,7 +108,7 @@ export default function UserForm({ currentData, setCurrentData, mode, onClose }:
                         />
                         <Input
                             size={4}
-                            title={trans('Status')}
+                            title={'Status'}
                             value={currentData.status || ''}
                             disabled={mode === 'preview'}
                             clear={() => {
@@ -131,7 +129,7 @@ export default function UserForm({ currentData, setCurrentData, mode, onClose }:
                 </ModalSection>
                 {mode !== 'preview' ? (
                     <ModalActionButton
-                        text={mode === 'add' ? trans('Add User') : trans('Edit User')}
+                        text={mode === 'add' ? 'Add User' : 'Edit User'}
                         disabled={isPending}
                         loading={isPending}
                         onClick={() => {
@@ -144,12 +142,10 @@ export default function UserForm({ currentData, setCurrentData, mode, onClose }:
                                     result.invalidateKeys?.forEach((k) =>
                                         queryClient.invalidateQueries({ queryKey: [k] }),
                                     );
-                                    showSuccess(
-                                        trans(mode === 'add' ? 'User saved' : 'User updated'),
-                                    );
+                                    showSuccess(mode === 'add' ? 'User saved' : 'User updated');
                                     onClose();
                                 } else {
-                                    showError(result.error ?? trans('Failed'));
+                                    showError(result.error ?? 'Failed');
                                 }
                             });
                         }}
