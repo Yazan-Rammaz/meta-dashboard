@@ -19,7 +19,6 @@ export function middleware(request: NextRequest) {
 
     return NextResponse.next();
 }
-
 // Configure the middleware to run on specific paths
 export const config = {
     matcher: [
