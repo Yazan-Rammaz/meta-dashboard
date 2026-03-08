@@ -1,0 +1,24 @@
+name = "meta-whatsapp-admin-dashboard"
+main = ".open-next/cloudflare/worker.js"
+compatibility_date = "2026-03-08"
+type = "javascript"
+
+[vars]
+# Add environment variables here if needed
+
+
+# 1- npm install -D @opennextjs/cloudflare
+
+# 2- next.config.js:  
+#        output: "standalone",    
+
+# 3- scripts:  
+#          "opennext:build": "opennext build",
+#          "deploy": "wrangler deploy"
+
+# 4- npm install -D wrangler npx wrangler login
+
+# 5- test locally: 
+#       npm run build
+#       npm run opennext:build
+#       npx wrangler dev
