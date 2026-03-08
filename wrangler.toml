@@ -1,7 +1,13 @@
+"$schema" = "./node_modules/wrangler/config-schema.json"
+main = ".open-next/worker.js"
 name = "meta-whatsapp-admin-dashboard"
-main = ".open-next/cloudflare/worker.js"
-compatibility_date = "2026-03-08"
-type = "javascript"
+# Set this to today's date
+compatibility_date = "2026-03-06"
+compatibility_flags = [ "nodejs_compat" ]
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
 
 [vars]
 # Add environment variables here if needed
