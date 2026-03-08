@@ -1,38 +1,17 @@
 "$schema" = "./node_modules/wrangler/config-schema.json"
 main = ".open-next/worker.js"
 name = "meta-dashboard"
-# Set this to today's date
 compatibility_date = "2026-03-06"
-compatibility_flags = [ "nodejs_compat" ]
+compatibility_flags = ["nodejs_compat"]
 
 [assets]
 directory = ".open-next/assets"
 binding = "ASSETS"
 
 [vars]
-# Add environment variables here if needed
-NEXT_PUBLIC_BASE_URL="https://vission_staging.ramaaz.dev/meta/api/v1"
-NEXT_PUBLIC_CLOUD_URL="https://res.cloudinary.com/dtcmozf4d/image/upload/v1/"
-#cloudinary
-NEXT_PUBLIC_BOUTIQUE_BANNERS_PATH="boutiques/boutiques/"
-NEXT_PUBLIC_BOUTIQUE_ICON_PATH="boutiques/boutiques/icon/"
-NEXT_PUBLIC_CATEGORY_ICON_PATH="category/"
-NEXT_PUBLIC_BRAND_ICON_PATH="brand/"
-
-
-# 1- npm install -D @opennextjs/cloudflare
-
-# 2- next.config.js:  
-#        output: "standalone",    
-
-# 3- scripts:  
-#          "opennext:build": "opennext build",
-#          "deploy": "wrangler deploy"
-
-# 4- npm install -D wrangler npx wrangler login
-
-
-# 5- test locally: 
-#       npm run build
-#       npm run opennext:build
-#       npx wrangler dev
+NEXT_PUBLIC_BASE_URL = "https://vission_staging.ramaaz.dev/meta/api/v1"
+NEXT_PUBLIC_CLOUD_URL = "https://res.cloudinary.com/dtcmozf4d/image/upload/v1/"
+NEXT_PUBLIC_BOUTIQUE_BANNERS_PATH = "boutiques/boutiques/"
+NEXT_PUBLIC_BOUTIQUE_ICON_PATH = "boutiques/boutiques/icon/"
+NEXT_PUBLIC_CATEGORY_ICON_PATH = "category/"
+NEXT_PUBLIC_BRAND_ICON_PATH = "brand/"
