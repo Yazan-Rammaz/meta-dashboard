@@ -16,9 +16,6 @@ const nextConfig = {
     NEXT_PUBLIC_BOUTIQUE_ICON_PATH: process.env.NEXT_PUBLIC_BOUTIQUE_ICON_PATH,
     NEXT_PUBLIC_BOUTIQUE_BANNERS_PATH: process.env.NEXT_PUBLIC_BOUTIQUE_BANNERS_PATH,
   },
-  turbopack: {
-    root: __dirname,
-  },
   // Disable source maps in production to prevent 404 errors for map files
   productionBrowserSourceMaps: false,
   reactStrictMode: true,
