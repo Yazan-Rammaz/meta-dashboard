@@ -67,7 +67,7 @@ function EnterPassWord({
 }: EnterPassWordProps) {
   const [pinValue1, setPinValue1] = useState('');
   const [pinValue2, setPinValue2] = useState('');
-  const [setPassword, { isLoading: isSetPasswordLoading }] =
+  const { mutateAsync: setPassword, isPending: isSetPasswordLoading } =
     useResetPasswordUsingOtpMutation();
 
   const noMatchPassword = () => {
@@ -161,7 +161,7 @@ function EnterPassWord({
                 await setPassword({
                   id_token: id_token,
                   password: value
-                }).unwrap();
+                });
                 document.querySelectorAll('.absolute-child').forEach((elem) => {
                   elem.classList.add('green-background');
                 });

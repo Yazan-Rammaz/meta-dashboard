@@ -1,9 +1,9 @@
+import { useAuthStore } from '@/stores/authStore';
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '@/features/auth/authSlice';
 
 export const useAuth = () => {
-  const user = useSelector(selectCurrentUser);
+    const user = useAuthStore((s) => s.user);
+    const access_token = useAuthStore((s) => s.access_token);
 
-  return useMemo(() => ({ user }), [user]);
+    return useMemo(() => ({ user, access_token }), [user, access_token]);
 };

@@ -1,162 +1,125 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Hidden,
-  lighten,
-  Popover,
-  Typography
-} from '@mui/material';
+'use client';
+
+import { Avatar, Box, Button, lighten, Popover, Typography, useMediaQuery } from '@mui/material';
 import { useContext, useRef, useState } from 'react';
 
 import { TranslationContext } from '@/contexts/appLangContext';
 import { useAuth } from '@/hooks/useAuth';
-import { useGetlanguagesQuery } from '@/services/languages';
-import SelectShort from '@/ui/SelectShort';
-import useTrans from '@/utils/translation_util';
 import { Lock } from '@mui/icons-material';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import { styled } from '@mui/material/styles';
 
 const MenuUserBox = styled(Box)(
-  ({ theme }) => `
+    ({ theme }) => `
         background: ${theme.colors.alpha.black[5]};
         padding: ${theme.spacing(2)};
-`
+`,
 );
 
 const UserBoxText = styled(Box)(
-  ({ theme }) => `
+    ({ theme }) => `
         text-align: left;
         padding-left: ${theme.spacing(1)};
-`
+`,
 );
 
 const UserBoxLabel = styled(Typography)(
-  ({ theme }) => `
+    ({ theme }) => `
         font-weight: ${theme.typography.fontWeightBold};
         color: ${theme.palette.secondary.main};
         display: block;
-`
+`,
 );
 
 const UserBoxDescription = styled(Typography)(
-  ({ theme }) => `
+    ({ theme }) => `
         color: ${lighten(theme.palette.secondary.main, 0.5)}
-`
+`,
 );
 
 function HeaderUserbox() {
-  const { user } = useAuth();
-  const { data: Languages } = useGetlanguagesQuery(undefined, {
-    skip: true
-  });
+    const { user } = useAuth();
+    const isMdDown = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+    const isSmDown = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
-  const ref = useRef<HTMLButtonElement | null>(null);
-  const [isOpen, setOpen] = useState<boolean>(false);
+    const ref = useRef<HTMLButtonElement | null>(null);
+    const [isOpen, setOpen] = useState<boolean>(false);
 
-  const handleOpen = (): void => {
-    setOpen(true);
-  };
+    const handleOpen = (): void => {
+        setOpen(true);
+    };
 
-  const handleClose = (): void => {
-    setOpen(false);
-  };
-  const { language_code, changeLanguage } = useContext(TranslationContext);
-  return (
-    <>
-      <Button
-        color="secondary"
-        ref={ref}
-        onClick={handleOpen}
-        sx={{ padding: '0px' }}
-      >
-        <Avatar
-          variant="rounded"
-          alt={user?.name}
-          src={''}
-          sx={{ width: 50, height: 50 }}
-        />
-        <Hidden mdDown>
-          <UserBoxText>
-            <UserBoxLabel variant="body1">{user?.name}</UserBoxLabel>
-          </UserBoxText>
-        </Hidden>
-        <Hidden smDown>
-          <ExpandMoreTwoToneIcon sx={{ ml: 1 }} />
-        </Hidden>
-      </Button>
-      <Popover
-        anchorEl={ref.current}
-        onClose={handleClose}
-        open={isOpen}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-      >
-        <MenuUserBox sx={{ minWidth: 210 }} display="flex">
-          <Avatar variant="rounded" alt={user?.name} src={''} />
-          <UserBoxText>
-            <UserBoxLabel variant="body1">{user?.name}</UserBoxLabel>
-            <UserBoxDescription variant="body2">
-              {user?.role}
-            </UserBoxDescription>
-          </UserBoxText>
-        </MenuUserBox>
-        <Box sx={{ m: 1 }}>
-          <SelectShort
-            disabled={false}
-            items={
-              Languages?.map((one) => {
-                return {
-                  id: one.language_code,
-                  title: one.language_code
-                };
-              }) ?? []
-            }
-            onSelect={(item: string | number | null) => {
-              changeLanguage(item as string);
-            }}
-            selected={language_code}
-            justify="center"
-          />
-        </Box>
-        <Box sx={{ m: 1 }}>
-          <Button
-            color="primary"
-            fullWidth
-            onClick={() => {
-              window.location.reload();
-            }}
-          >
-            <Lock sx={{ mr: 1 }} />
-            {useTrans()('Lock')}
-          </Button>
-        </Box>
-        <Box sx={{ m: 1 }}>
-          <Button
-            color="secondary"
-            fullWidth
-            onClick={() => {
-              if (typeof window !== 'undefined') {
-                localStorage.setItem('user', 'null');
-              }
-              window.location.reload();
-            }}
-          >
-            <LockOpenTwoToneIcon sx={{ mr: 1 }} />
-            {useTrans()('SignOut')}
-          </Button>
-        </Box>
-      </Popover>
-    </>
-  );
+    const handleClose = (): void => {
+        setOpen(false);
+    };
+    const { language_code, changeLanguage } = useContext(TranslationContext);
+    return (
+        <>
+            <Button color="secondary" ref={ref} onClick={handleOpen} sx={{ padding: '0px' }}>
+                <Avatar
+                    variant="rounded"
+                    alt={user?.name}
+                    src={''}
+                    sx={{ width: 50, height: 50 }}
+                />
+                {!isMdDown && (
+                    <UserBoxText>
+                        <UserBoxLabel variant="body1">{user?.name}</UserBoxLabel>
+                    </UserBoxText>
+                )}
+                {!isSmDown && <ExpandMoreTwoToneIcon sx={{ ml: 1 }} />}
+            </Button>
+            <Popover
+                anchorEl={ref.current}
+                onClose={handleClose}
+                open={isOpen}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+            >
+                <MenuUserBox sx={{ minWidth: 210 }} display="flex">
+                    <Avatar variant="rounded" alt={user?.name} src={''} />
+                    <UserBoxText>
+                        <UserBoxLabel variant="body1">{user?.name}</UserBoxLabel>
+                        <UserBoxDescription variant="body2">{user?.role}</UserBoxDescription>
+                    </UserBoxText>
+                </MenuUserBox>
+                <Box sx={{ m: 1 }}>
+                    <Button
+                        color="primary"
+                        fullWidth
+                        onClick={() => {
+                            window.location.reload();
+                        }}
+                    >
+                        <Lock sx={{ mr: 1 }} />
+                        {'Lock'}
+                    </Button>
+                </Box>
+                <Box sx={{ m: 1 }}>
+                    <Button
+                        color="secondary"
+                        fullWidth
+                        onClick={() => {
+                            if (typeof window !== 'undefined') {
+                                localStorage.setItem('user', 'null');
+                            }
+                            window.location.reload();
+                        }}
+                    >
+                        <LockOpenTwoToneIcon sx={{ mr: 1 }} />
+                        SignOut
+                    </Button>
+                </Box>
+            </Popover>
+        </>
+    );
 }
 
 export default HeaderUserbox;

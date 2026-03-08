@@ -1,151 +1,145 @@
-import { RootState } from '@/app/store';
-import { logout } from '@/features/auth/authSlice';
+import { apiFetch } from '@/lib/apiFetch';
+import { queryClient } from '@/lib/queryClient';
+import { useAuthStore } from '@/stores/authStore';
 import { EnterOtpTokenResponse } from '@/types/auth';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { useMutation } from '@tanstack/react-query';
 
 export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  status: string;
-  is_blocked_by_admin?: boolean;
-  account_status?: string;
-  created_at: string;
-  updated_at: string;
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    status: string;
+    is_blocked_by_admin?: boolean;
+    account_status?: string;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface UserResponse {
-  user: User;
-  access_token: string;
+    user: User;
+    access_token: string;
 }
 
 export interface LoginRequest {
-  email: string;
-  password: string;
+    email: string;
+    password: string;
 }
 
 export interface SendOtpTokenResponse {
-  message: string;
+    message: string;
 }
 
 export interface EnterOtpTokenRequest {
-  username: string;
-  token: string;
-  session_token: string;
+    username: string;
+    token: string;
+    session_token: string;
 }
 
 export interface ResetPasswordUsingOtpRequest {
-  id_token: string;
-  password: string;
+    id_token: string;
+    password: string;
 }
 
 export interface ResetPasswordUsingOtpResponse {
-  message: string;
+    message: string;
 }
 
-// Create a custom baseQuery that handles 401 Unauthorized errors
-const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.REACT_APP_BASE_URL,
-  prepareHeaders: (headers, { getState }) => {
-    const access_token = (getState() as RootState)?.auth?.access_token;
-    if (access_token) {
-      headers.set('authorization', `Bearer ${access_token}`);
-    }
-    return headers;
-  }
-});
+export function useLoginMutation() {
+    return useMutation({
+        mutationKey: ['auth', 'login'],
+        mutationFn: async (credentials: LoginRequest): Promise<UserResponse> => {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(credentials),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data?.error ?? 'Login failed');
+            }
+            return {
+                user: data.user,
+                access_token: data.access_token,
+            };
+        },
+        onSuccess: ({ user, access_token }) => {
+            useAuthStore.getState().setCredentials({ user, access_token });
+            // Invalidate permissions cache so it re-fetches with the new token
+            queryClient.invalidateQueries({ queryKey: ['permissions', 'me'] });
+        },
+    });
+}
 
-const unauthBaseQuery = async (args: any, api: any, extraOptions: any) => {
-  let result = await baseQuery(args, api, extraOptions);
-  if (result.error && result.error.status === 401) {
-    // Dispatch the logout action
-    api.dispatch(logout());
-    // Redirect to the login page
-    window.location.href = '/login';
-  }
-  return result;
-};
+export function useLogoutMutation() {
+    return useMutation({
+        mutationKey: ['auth', 'logout'],
+        mutationFn: async () => {
+            await fetch('/api/auth/logout', { method: 'POST' });
+        },
+        onSuccess: () => {
+            useAuthStore.getState().logout();
+        },
+    });
+}
 
-export const api = createApi({
-  tagTypes: ['Roles', 'Languages', 'Users', 'Clients'],
-  refetchOnMountOrArgChange: 30,
-  refetchOnFocus: true,
-  refetchOnReconnect: true,
-  baseQuery: unauthBaseQuery,
-  endpoints: (builder) => ({
-    login: builder.mutation<UserResponse, LoginRequest>({
-      query: (credentials) => ({
-        url: 'login',
-        method: 'POST',
-        body: credentials
-      }),
-      transformResponse: (response: {
-        user: User;
-        token: { access_token: string };
-      }) => {
-        return {
-          user: response.user,
-          access_token: response.token?.access_token
-        };
-      }
-    }),
-    protected: builder.mutation<{ message: string }, void>({
-      query: () => 'protected'
-    }),
-    checkUserName: builder.mutation<User, string>({
-      query: (username) => ({
-        url: `/users/profile_by_username/${username}`,
-        method: 'GET'
-      }),
-      transformResponse: (response: { data: User }) => {
-        return response.data;
-      }
-    }),
-    sendOtpToken: builder.mutation<SendOtpTokenResponse, string>({
-      query: (username) => ({
-        url: `/auth/password_reset/send_token`,
-        method: 'POST',
-        body: { username }
-      }),
-      transformResponse: (response: { data: { message: string } }) => {
-        return response.data;
-      }
-    }),
-    enterOtpToken: builder.mutation<
-      EnterOtpTokenResponse,
-      EnterOtpTokenRequest
-    >({
-      query: (payload) => ({
-        url: `/auth/password_reset/check_token`,
-        method: 'POST',
-        body: payload
-      }),
-      transformResponse: (response: { data: EnterOtpTokenResponse }) => {
-        return response.data;
-      }
-    }),
-    resetPasswordUsingOtp: builder.mutation<
-      ResetPasswordUsingOtpResponse,
-      ResetPasswordUsingOtpRequest
-    >({
-      query: (payload) => ({
-        url: `/auth/resetPasswordUsingOTP`,
-        method: 'POST',
-        body: payload
-      }),
-      transformResponse: (response: { data: { message: string } }) => {
-        return response.data;
-      }
-    })
-  })
-});
+export function useProtectedMutation() {
+    return useMutation({
+        mutationKey: ['auth', 'protected'],
+        mutationFn: async (): Promise<{ message: string }> => {
+            const result = await apiFetch<{ message: string }>('/protected', { method: 'POST' });
+            return result ?? { message: '' };
+        },
+    });
+}
 
-export const {
-  useLoginMutation,
-  useProtectedMutation,
-  useCheckUserNameMutation,
-  useSendOtpTokenMutation,
-  useEnterOtpTokenMutation,
-  useResetPasswordUsingOtpMutation
-} = api;
+export function useCheckUserNameMutation() {
+    return useMutation({
+        mutationKey: ['auth', 'checkUsername'],
+        mutationFn: async (username: string): Promise<User> => {
+            const result = await apiFetch<{ data: User }>(`/users/profile_by_username/${username}`);
+            return result!.data;
+        },
+    });
+}
+
+export function useSendOtpTokenMutation() {
+    return useMutation({
+        mutationKey: ['auth', 'sendOtp'],
+        mutationFn: async (username: string): Promise<SendOtpTokenResponse> => {
+            const result = await apiFetch<{ data: SendOtpTokenResponse }>(
+                '/auth/password_reset/send_token',
+                { method: 'POST', body: { username } },
+            );
+            return result!.data;
+        },
+    });
+}
+
+export function useEnterOtpTokenMutation() {
+    return useMutation({
+        mutationKey: ['auth', 'enterOtp'],
+        mutationFn: async (payload: EnterOtpTokenRequest): Promise<EnterOtpTokenResponse> => {
+            const result = await apiFetch<{ data: EnterOtpTokenResponse }>(
+                '/auth/password_reset/check_token',
+                { method: 'POST', body: payload },
+            );
+            return result!.data;
+        },
+    });
+}
+
+export function useResetPasswordUsingOtpMutation() {
+    return useMutation({
+        mutationKey: ['auth', 'resetPassword'],
+        mutationFn: async (
+            payload: ResetPasswordUsingOtpRequest,
+        ): Promise<ResetPasswordUsingOtpResponse> => {
+            const result = await apiFetch<{ data: ResetPasswordUsingOtpResponse }>(
+                '/auth/resetPasswordUsingOTP',
+                { method: 'POST', body: payload },
+            );
+            return result!.data;
+        },
+    });
+}

@@ -1,67 +1,61 @@
+import { apiFetch } from '@/lib/apiFetch';
+import { queryClient } from '@/lib/queryClient';
+import type { PaginatedResponse } from '@/models/pagination';
 import { Role } from '@/models/roles';
-import { api } from '@/services/auth';
+import { keepPreviousData, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
-export interface GetRolesResponse {
-  data: Role[];
+export function useGetRolesQuery(options?: { initialData?: Role[]; page?: number }) {
+    const page = options?.page ?? 1;
+    return useQuery({
+        queryKey: ['roles', { page }],
+        queryFn: async () => {
+            const result = await apiFetch<PaginatedResponse<Role>>(`/roles?page=${page}`);
+            return result?.data ?? [];
+        },
+        placeholderData: keepPreviousData,
+        ...(options?.initialData !== undefined ? { initialData: options.initialData } : {}),
+    });
 }
 
-export const RolesApi = api.injectEndpoints({
-  endpoints: (builder) => ({
-    getRoles: builder.query<Array<Role>, void>({
-      query: () => ({
-        url: '/roles',
-        method: 'GET'
-      }),
-      transformResponse: (response: GetRolesResponse) => {
-        return response.data;
-      },
-      providesTags: (result) =>
-        // is result available?
-        result
-          ? // successful query
-            [
-              ...result.map(({ id }) => ({ type: 'Roles', id }) as const),
-              { type: 'Roles', id: 'LIST' }
-            ]
-          : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
-            [{ type: 'Roles', id: 'LIST' }]
-    }),
-    addRole: builder.mutation<Role, Partial<Role>>({
-      query(body) {
-        return {
-          url: `/roles`,
-          method: 'POST',
-          body
-        };
-      },
-      invalidatesTags: [{ type: 'Roles', id: 'LIST' }]
-    }),
-    updateRole: builder.mutation<Role, Partial<Role>>({
-      query(body) {
-        return {
-          url: `/roles/update/${body.id}`,
-          method: 'PUT',
-          body
-        };
-      },
-      invalidatesTags: [{ type: 'Roles', id: 'LIST' }]
-    }),
-    deleteRole: builder.mutation<Role, Partial<Role>>({
-      query(body) {
-        return {
-          url: `/roles/destroy/${body.id}`,
-          method: 'DELETE',
-          body
-        };
-      },
-      invalidatesTags: [{ type: 'Roles', id: 'LIST' }]
-    })
-  })
-});
+export function useGetRolesInfiniteQuery() {
+    return useInfiniteQuery({
+        queryKey: ['roles', 'infinite'],
+        queryFn: ({ pageParam }) =>
+            apiFetch<PaginatedResponse<Role>>(`/roles?page=${pageParam}&per_page=12`).then(
+                (r) => r!,
+            ),
+        initialPageParam: 1,
+        getNextPageParam: (last) =>
+            last.current_page < last.last_page ? last.current_page + 1 : undefined,
+    });
+}
 
-export const {
-  useGetRolesQuery,
-  useAddRoleMutation,
-  useUpdateRoleMutation,
-  useDeleteRoleMutation
-} = RolesApi;
+export function useAddRoleMutation() {
+    return useMutation({
+        mutationKey: ['roles', 'add'],
+        mutationFn: async (role: Partial<Role>) => {
+            return apiFetch('/roles', { method: 'POST', body: role });
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['roles'] }),
+    });
+}
+
+export function useUpdateRoleMutation() {
+    return useMutation({
+        mutationKey: ['roles', 'update'],
+        mutationFn: async (role: Partial<Role>) => {
+            return apiFetch(`/roles/update/${role.id}`, { method: 'PUT', body: role });
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['roles'] }),
+    });
+}
+
+export function useDeleteRoleMutation() {
+    return useMutation({
+        mutationKey: ['roles', 'delete'],
+        mutationFn: async (role: Partial<Role>) => {
+            return apiFetch(`/roles/destroy/${role.id}`, { method: 'DELETE' });
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['roles'] }),
+    });
+}
