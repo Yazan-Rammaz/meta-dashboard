@@ -9,6 +9,7 @@
   },
   "private": true,
   "dependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mkholt/pdf-thumbnail": "^2.0.0",
@@ -54,6 +55,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "pages:build": "npx @cloudflare/next-on-pages",
     "start": "next start",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
