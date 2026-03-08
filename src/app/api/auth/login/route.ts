@@ -31,7 +31,7 @@ export async function POST(req: Request) {
                 path: '/',
             });
         }
-
+        // Return user data and token in the response body
         return NextResponse.json({
             user: data.user,
             access_token: token,
