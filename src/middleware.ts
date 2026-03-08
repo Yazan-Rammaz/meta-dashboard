@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 // This middleware will handle server-side routing for Next.js
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
 
     // For direct access to dashboard routes, we need to ensure the page is rendered
