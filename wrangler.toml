@@ -3,6 +3,7 @@ name = "meta-whatsapp-dashboard"
 main = ".open-next/worker.js"
 compatibility_date = "2026-03-06"
 compatibility_flags = ["nodejs_compat"]
+workers_dev = true  
 
 [assets]
 directory = ".open-next/assets"
