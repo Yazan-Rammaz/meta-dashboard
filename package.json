@@ -17,6 +17,7 @@
     "@mui/material": "^7.3.9",
     "@mui/styles": "^6.5.0",
     "@mui/x-date-pickers": "^8.27.2",
+    "@opennextjs/cloudflare": "^1.17.1",
     "@tanstack/react-query": "^5.90.21",
     "apexcharts": "^5.10.3",
     "array-move": "^4.0.0",
