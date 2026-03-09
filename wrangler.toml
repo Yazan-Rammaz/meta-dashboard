@@ -1,8 +1,13 @@
-name = "meta-whatsapp-dashboard"
-compatibility_date = "2025-03-01"
+"$schema" = "./node_modules/wrangler/config-schema.json"
 
+name = "meta-whatsapp-dashboard"
+main = ".open-next/worker.js"
+compatibility_date = "2026-03-06"
 compatibility_flags = ["nodejs_compat"]
 
-pages_build_output_dir = ".open-next"
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
 [vars]
 NEXT_PUBLIC_BASE_URL = "https://vission_staging.ramaaz.dev/meta/api/v1"
