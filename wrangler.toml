@@ -1,4 +1,3 @@
-"$schema" = "./node_modules/wrangler/config-schema.json"
 
 name = "meta-whatsapp-dashboard"
 main = ".open-next/worker.js"
