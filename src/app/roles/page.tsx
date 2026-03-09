@@ -3,7 +3,7 @@ import { apiFetch } from '@/lib/apiFetch';
 import type { PaginatedResponse } from '@/models/pagination';
 import type { Role } from '@/models/roles';
 
-export const runtime = 'edge';
+// export const runtime = 'edge';
 
 export default async function RolesPage() {
     let initialData: PaginatedResponse<Role> | undefined;
