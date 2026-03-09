@@ -54,10 +54,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "opennext:build": "opennextjs-cloudflare build",
-    "preview": "opennextjs-cloudflare preview",
-    "deploy": "npx wrangler deploy",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "start": "next start",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
@@ -76,6 +72,7 @@
     ]
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.17.1",
     "@tanstack/react-query-devtools": "^5.91.3",
     "@types/node": "^25.3.5",
     "@types/nprogress": "^0.2.3",
