@@ -21,11 +21,7 @@ No test framework is configured in this project.
 Copy `.env.example` to `.env` and set:
 
 - `NEXT_PUBLIC_BASE_URL` — Backend API base URL (uses legacy CRA naming via
-  `next.config.js`)
-- `NEXT_PUBLIC_CLOUD_URL` — Cloudinary image base URL
-- `NEXT_PUBLIC_BRAND_ICON_PATH`, `NEXT_PUBLIC_CATEGORY_ICON_PATH`,
-  `NEXT_PUBLIC_BOUTIQUE_ICON_PATH`, `NEXT_PUBLIC_BOUTIQUE_BANNERS_PATH` —
-  Cloudinary paths
+  `next.config.js`) Cloudinary paths
 
 ## Architecture
 
