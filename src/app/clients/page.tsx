@@ -3,6 +3,8 @@ import { apiFetch } from '@/lib/apiFetch';
 import type { Client } from '@/models/clients';
 import type { PaginatedResponse } from '@/models/pagination';
 
+export const runtime = 'edge';
+
 export default async function ClientsPage() {
     let initialData: PaginatedResponse<Client> | undefined;
     try {
