@@ -1,5 +1,8 @@
 name = "meta-whatsapp-dashboard"
 compatibility_date = "2025-03-01"
 
+compatibility_flags = ["nodejs_compat"]
+
+pages_build_output_dir = ".open-next"
 [vars]
 NEXT_PUBLIC_BASE_URL = "https://vission_staging.ramaaz.dev/meta/api/v1"
