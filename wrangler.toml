@@ -9,5 +9,10 @@ workers_dev = true
 directory = ".open-next/assets"
 binding = "ASSETS"
 
+[observability]
+[observability.logs]
+enabled = true
+invocation_logs = true
+
 [vars]
 NEXT_PUBLIC_BASE_URL = "https://vission_staging.ramaaz.dev/meta/api/v1"
