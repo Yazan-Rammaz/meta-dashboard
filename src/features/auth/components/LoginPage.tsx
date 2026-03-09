@@ -92,8 +92,8 @@ interface LoginProps {
 function LogIn({ user }: LoginProps) {
     const router = useRouter();
     const { showError } = useToast();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('admin@whatsapp-gateway.com');
+    const [password, setPassword] = useState('password');
     const { mutateAsync: login, isPending: isLoading } = useLoginMutation();
     const handleError = (err?: unknown) => {
         document.querySelectorAll('.absolute-child').forEach((elem) => {
