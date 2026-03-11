@@ -4,11 +4,14 @@ import { useToast } from '@/contexts/toastContext';
 import { createClientAction, updateClientAction } from '@/features/clients/actions';
 import { queryClient } from '@/lib/queryClient';
 import { Client } from '@/models/clients';
+import { MetaAuthResponse } from '@/models/metaAuth';
+import MetaLoginDialog from '@/features/clients/components/MetaLoginDialog';
 import ModalActionButton from '@/ui/Button/modalActionButton';
 import Input from '@/ui/Input';
 import ModalBody from '@/ui/Modal/ModalBody';
 import ModalSection from '@/ui/ModalSection';
-import { useTransition } from 'react';
+import Button from '@mui/material/Button';
+import { useState, useTransition } from 'react';
 
 interface Props {
     currentData: Client;
@@ -20,6 +23,20 @@ interface Props {
 export default function ClientForm({ currentData, setCurrentData, mode, onClose }: Props) {
     const { showSuccess, showError } = useToast();
     const [isPending, startTransition] = useTransition();
+    const [metaDialogOpen, setMetaDialogOpen] = useState(false);
+    const [metaLoginType, setMetaLoginType] = useState<'whatsapp' | 'meta'>('whatsapp');
+
+    const handleMetaSuccess = (data: MetaAuthResponse) => {
+        setCurrentData({
+            ...currentData,
+            access_token: data.access_token,
+            whatsapp_business_id: data.whatsapp_business_id,
+            phone_number_id: data.phone_number_id,
+            display_phone_number: data.display_phone_number,
+        });
+        setMetaDialogOpen(false);
+        showSuccess('Account connected successfully');
+    };
 
     return (
         <ModalBody>
@@ -161,6 +178,40 @@ export default function ClientForm({ currentData, setCurrentData, mode, onClose 
                         />
                     </>
                 </ModalSection>
+                {mode !== 'preview' && (
+                    <ModalSection title={'Meta Integration'}>
+                        <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                onClick={() => {
+                                    setMetaLoginType('whatsapp');
+                                    setMetaDialogOpen(true);
+                                }}
+                                sx={{ flex: 1, textTransform: 'none' }}
+                            >
+                                Connect WhatsApp
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                onClick={() => {
+                                    setMetaLoginType('meta');
+                                    setMetaDialogOpen(true);
+                                }}
+                                sx={{ flex: 1, textTransform: 'none' }}
+                            >
+                                Connect Meta
+                            </Button>
+                        </div>
+                    </ModalSection>
+                )}
+                <MetaLoginDialog
+                    open={metaDialogOpen}
+                    onClose={() => setMetaDialogOpen(false)}
+                    onSuccess={handleMetaSuccess}
+                    loginType={metaLoginType}
+                />
                 {mode !== 'preview' ? (
                     <ModalActionButton
                         text={mode === 'add' ? 'Add Client' : 'Edit Client'}
