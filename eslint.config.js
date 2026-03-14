@@ -10,6 +10,9 @@ import unusedImportsPlugin from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 
 export default [
+  {
+    ignores: ['node_modules/**', '.next/**', 'dist/**', 'build/**', 'coverage/**']
+  },
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
   pluginJs.configs.recommended,
   {

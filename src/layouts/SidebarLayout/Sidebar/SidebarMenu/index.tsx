@@ -378,6 +378,13 @@ function SidebarMenu() {
             permission: PAGE_PERMISSIONS.USERS,
         },
         {
+            link: '/templates',
+            id: 8,
+            label: 'Templates',
+            icon: DocsIcon,
+            permission: PAGE_PERMISSIONS.TEMPLATES,
+        },
+        {
             link: '/webhooks',
             id: 7,
             label: 'Webhooks',

@@ -38,7 +38,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         );
     }
 
-    if (pathname === '/login') {
+    if (pathname === '/login' || pathname === '/meta-login-frame') {
         return <>{children}</>;
     }
 
