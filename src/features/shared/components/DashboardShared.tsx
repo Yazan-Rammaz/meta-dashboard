@@ -5,6 +5,7 @@ import Filter from '@/ui/icons/Filter';
 import FollowerIcon from '@/ui/icons/FollowerIcon';
 import ToolTip from '@/ui/Tooltip';
 import CanCall from '@/utils/ability';
+import CircularProgress from '@mui/material/CircularProgress';
 import Image from 'next/image';
 import { JSX, useContext } from 'react';
 
@@ -24,6 +25,8 @@ interface Props {
     add_permission?: string;
     onFilterClick?: () => void;
     onApplicationClick?: () => void;
+    onRefreshClick?: () => void;
+    isRefreshing?: boolean;
     activeViewMode?: 'list' | 'table';
 }
 export const TopNav = ({
@@ -38,6 +41,8 @@ export const TopNav = ({
     viewData,
     onFilterClick,
     onApplicationClick,
+    onRefreshClick,
+    isRefreshing,
     activeViewMode,
 }: Props) => {
     const { language_code, changeLanguage } = useContext(TranslationContext);
@@ -133,6 +138,38 @@ export const TopNav = ({
                 >
                     <span>
                         <Application />
+                    </span>
+                </div>
+                <div
+                    className="top-option pl-6"
+                    onClick={isRefreshing ? undefined : onRefreshClick}
+                    title="Refresh Data"
+                    style={{
+                        cursor: onRefreshClick && !isRefreshing ? 'pointer' : 'default',
+                        opacity: onRefreshClick ? (isRefreshing ? 0.7 : 1) : 0.5,
+                    }}
+                >
+                    <span>
+                        {isRefreshing ? (
+                            <CircularProgress size={14} thickness={6} />
+                        ) : (
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <path d="M23 4v6h-6" />
+                                <path d="M1 20v-6h6" />
+                                <path d="M3.51 9a9 9 0 0 1 14.13-3.36L23 10" />
+                                <path d="M20.49 15a9 9 0 0 1-14.13 3.36L1 14" />
+                            </svg>
+                        )}
                     </span>
                 </div>
                 <svg

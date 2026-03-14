@@ -30,7 +30,6 @@ export async function apiFetch<T>(
     const { method = 'GET', body, headers: extraHeaders = {}, silent = false } = options;
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
     const url = `${baseUrl}/${path.replace(/^\//, '')}`;
-
     const headers: Record<string, string> = { ...extraHeaders };
 
     if (body && !(body instanceof FormData)) {
@@ -42,6 +41,7 @@ export async function apiFetch<T>(
         const { cookies } = await import('next/headers');
         const token = (await cookies()).get('access_token')?.value;
         if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
             headers['Cookie'] = `access_token=${token}`;
         }
     } else {
@@ -94,5 +94,6 @@ export async function apiFetch<T>(
     }
 
     const json = await res.json();
+    // console.log(`[apiFetch] Response from ${method} ${url}:`, json);
     return json as T;
 }

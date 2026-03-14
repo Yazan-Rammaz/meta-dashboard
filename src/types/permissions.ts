@@ -32,6 +32,12 @@ export const enum PermissionKey {
   USERS_DELETE = 'users.delete',
   USERS_READ = 'users.read',
   USERS_UPDATE = 'users.update',
+  
+  // Templates Permissions
+  TEMPLATES_CREATE = 'templates.create',
+  TEMPLATES_DELETE = 'templates.delete',
+  TEMPLATES_READ = 'templates.read',
+  TEMPLATES_UPDATE = 'templates.update',
 
   // Webhooks Permissions
   WEBHOOKS_READ = 'webhooks.read'
@@ -44,5 +50,6 @@ export const PAGE_PERMISSIONS = {
   CLIENTS: PermissionKey.CLIENTS_READ,
   MESSAGES: PermissionKey.MESSAGES_READ,
   USERS: PermissionKey.USERS_READ,
+  TEMPLATES: PermissionKey.TEMPLATES_READ,
   WEBHOOKS: PermissionKey.WEBHOOKS_READ
 } as const;

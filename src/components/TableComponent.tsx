@@ -11,13 +11,14 @@ import {
     TableRow,
     Typography,
 } from '@mui/material';
+import { ReactNode } from 'react';
 
 export interface TableColumn<T> {
     id: keyof T | 'actions';
     label: string;
     minWidth?: number;
     align?: 'right' | 'center' | 'left';
-    format?: (value: any) => string;
+    format?: (value: any) => ReactNode;
 }
 
 interface TableComponentProps<T> {
@@ -25,6 +26,7 @@ interface TableComponentProps<T> {
     data: T[];
     onEdit?: (row: T) => void;
     onDelete?: (row: T) => void;
+    renderActions?: (row: T) => ReactNode;
     total?: number;
     page?: number;
     onPageChange?: (page: number) => void;
@@ -36,6 +38,7 @@ function TableComponent<T extends { id?: string | number }>({
     data,
     onEdit,
     onDelete,
+    renderActions,
     total,
     page = 1,
     onPageChange,
@@ -75,6 +78,7 @@ function TableComponent<T extends { id?: string | number }>({
                                             <TableCell key={String(column.id)} align={column.align}>
                                                 {column.id === 'actions' ? (
                                                     <>
+                                                        {renderActions?.(row)}
                                                         {onEdit && (
                                                             <Button onClick={() => onEdit(row)}>
                                                                 Edit

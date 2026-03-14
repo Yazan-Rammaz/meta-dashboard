@@ -5,7 +5,7 @@ import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { createContext, ReactNode, useEffect, useState } from 'react';
 
 export const ThemeContext = createContext((themeName: string): void => {
-    console.log(themeName);
+    // console.log(themeName);
 });
 
 const ThemeProviderWrapper: React.FC<{ children: ReactNode }> = (props) => {
