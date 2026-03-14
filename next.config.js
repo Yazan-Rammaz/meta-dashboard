@@ -9,10 +9,6 @@ const nextConfig = {
         ],
     },
     trailingSlash: false,
-    env: {
-        NEXT_PUBLIC_BASE_URL:
-            process.env.NEXT_PUBLIC_BASE_URL || 'https://vission_staging.ramaaz.dev/meta/api/v1',
-    },
     // Disable source maps in production to prevent 404 errors for map files
     productionBrowserSourceMaps: false,
     reactStrictMode: true,
