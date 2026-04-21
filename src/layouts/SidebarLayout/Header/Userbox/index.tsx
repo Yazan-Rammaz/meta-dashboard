@@ -108,7 +108,7 @@ function HeaderUserbox() {
                         fullWidth
                         onClick={() => {
                             if (typeof window !== 'undefined') {
-                                localStorage.setItem('user', 'null');
+                                localStorage.clear();
                             }
                             window.location.reload();
                         }}
