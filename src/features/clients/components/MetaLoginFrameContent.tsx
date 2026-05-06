@@ -44,6 +44,7 @@ export default function MetaLoginFrameContent({ loginType }: MetaLoginFrameConte
 
     const config = getSdkConfig(loginType);
     const hasConfig = config.appId && config.configId;
+    const flowLabel = loginType === 'whatsapp' ? 'WhatsApp' : 'Meta';
 
     const reportError = useCallback((message: string) => {
         setErrorMessage(message);
@@ -80,7 +81,13 @@ export default function MetaLoginFrameContent({ loginType }: MetaLoginFrameConte
         script.crossOrigin = 'anonymous';
 
         window.fbAsyncInit = function () {
-            FB.init({
+            const sdk = FB;
+            if (!sdk) {
+                setSdkStatus('error');
+                return;
+            }
+
+            sdk.init({
                 appId: config.appId,
                 cookie: true,
                 xfbml: true,
@@ -142,6 +149,11 @@ export default function MetaLoginFrameContent({ loginType }: MetaLoginFrameConte
     }
 
     function handleLogin() {
+        if (!FB) {
+            reportError('Facebook SDK is not ready');
+            return;
+        }
+
         const loginOptions: fb.LoginOptions & { extras?: unknown } =
             loginType === 'whatsapp'
                 ? {
@@ -167,8 +179,11 @@ export default function MetaLoginFrameContent({ loginType }: MetaLoginFrameConte
                   };
 
         FB.login(function (response: fb.StatusResponse) {
+            console.log('FB.login response:', response);
             if (response.authResponse) {
+                console.log('Received authResponse:', response.authResponse);
                 const code = (response.authResponse as unknown as { code: string }).code;
+                console.log('Extracted code:', code);
                 exchangeCode(code);
             } else {
                 reportError('Authentication cancelled');
@@ -205,11 +220,14 @@ export default function MetaLoginFrameContent({ loginType }: MetaLoginFrameConte
 
             {sdkStatus === 'ready' && !isExchanging && (
                 <div className="text-center">
+                    <p className="mb-3 text-xs text-gray-500">Active flow: {flowLabel}</p>
                     <button
                         className="px-4 py-2 font-medium text-xs rounded-lg bg-indigo-600 hover:bg-indigo-400 text-white"
                         onClick={handleLogin}
                     >
-                        Login with Facebook
+                        {loginType === 'whatsapp'
+                            ? 'Continue WhatsApp setup via Facebook'
+                            : 'Continue Meta setup via Facebook'}
                     </button>
                 </div>
             )}

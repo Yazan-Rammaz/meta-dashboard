@@ -1,13 +1,14 @@
 import MetaLoginFrameContent from '@/features/clients/components/MetaLoginFrameContent';
 
 interface MetaLoginFramePageProps {
-    searchParams?: {
+    searchParams?: Promise<{
         loginType?: string;
-    };
+    }>;
 }
 
-export default function MetaLoginFramePage({ searchParams }: MetaLoginFramePageProps) {
-    const loginType = searchParams?.loginType === 'meta' ? 'meta' : 'whatsapp';
+export default async function MetaLoginFramePage({ searchParams }: MetaLoginFramePageProps) {
+    const resolvedSearchParams = await searchParams;
+    const loginType = resolvedSearchParams?.loginType === 'meta' ? 'meta' : 'whatsapp';
 
     return <MetaLoginFrameContent loginType={loginType} />;
 }
