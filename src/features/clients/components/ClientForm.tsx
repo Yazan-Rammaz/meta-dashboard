@@ -2,10 +2,10 @@
 
 import { useToast } from '@/contexts/toastContext';
 import { createClientAction, updateClientAction } from '@/features/clients/actions';
+import MetaLoginDialog from '@/features/clients/components/MetaLoginDialog';
 import { queryClient } from '@/lib/queryClient';
 import { Client } from '@/models/clients';
 import { MetaAuthResponse } from '@/models/metaAuth';
-import MetaLoginDialog from '@/features/clients/components/MetaLoginDialog';
 import ModalActionButton from '@/ui/Button/modalActionButton';
 import Input from '@/ui/Input';
 import ModalBody from '@/ui/Modal/ModalBody';
@@ -29,13 +29,12 @@ export default function ClientForm({ currentData, setCurrentData, mode, onClose 
     const handleMetaSuccess = (data: MetaAuthResponse) => {
         setCurrentData({
             ...currentData,
-            access_token: data.access_token,
-            whatsapp_business_id: data.whatsapp_business_id,
-            phone_number_id: data.phone_number_id,
-            display_phone_number: data.display_phone_number,
+            whatsapp_business_id: data.accountId ?? currentData.whatsapp_business_id,
+            phone_number_id: data.phoneNumberId ?? currentData.phone_number_id,
+            display_phone_number: data.phoneNumber ?? currentData.display_phone_number,
         });
         setMetaDialogOpen(false);
-        showSuccess('Account connected successfully');
+        showSuccess(data.message ?? 'Account connected successfully');
     };
 
     return (

@@ -36,10 +36,16 @@ function postFrameMessage(message: MetaLoginFrameMessage) {
     window.parent.postMessage(message, window.location.origin);
 }
 
+interface EmbeddedSignupState {
+    waba_id?: string;
+    phone_number_id?: string;
+}
+
 export default function MetaLoginFrameContent({ loginType }: MetaLoginFrameContentProps) {
     const [sdkStatus, setSdkStatus] = useState<SdkStatus>('loading');
     const [isExchanging, setIsExchanging] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [embeddedSignupState, setEmbeddedSignupState] = useState<EmbeddedSignupState>({});
     const scriptRef = useRef<HTMLScriptElement | null>(null);
 
     const config = getSdkConfig(loginType);
@@ -108,6 +114,7 @@ export default function MetaLoginFrameContent({ loginType }: MetaLoginFrameConte
         setSdkStatus('loading');
         setIsExchanging(false);
         setErrorMessage(null);
+        setEmbeddedSignupState({});
         initSdk();
 
         return () => {
@@ -118,20 +125,46 @@ export default function MetaLoginFrameContent({ loginType }: MetaLoginFrameConte
         };
     }, [initSdk]);
 
+    // Capture waba_id and phone_number_id from Meta's embedded signup session info event
+    useEffect(() => {
+        function handleSessionInfo(event: MessageEvent) {
+            if (event.origin !== 'https://www.facebook.com') return;
+            try {
+                const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                if (data?.type === 'WA_EMBEDDED_SIGNUP' && data?.event === 'FINISH') {
+                    setEmbeddedSignupState({
+                        waba_id: data?.data?.waba_id,
+                        phone_number_id: data?.data?.phone_number_id,
+                    });
+                }
+            } catch {
+                // not a JSON message, ignore
+            }
+        }
+
+        window.addEventListener('message', handleSessionInfo);
+        return () => window.removeEventListener('message', handleSessionInfo);
+    }, []);
+
     async function exchangeCode(code: string) {
         setIsExchanging(true);
 
         try {
-            const res = await fetch('/api/clients/exchange-token', {
+            const res = await fetch('/api/whatsapp/link-account', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code, login_type: loginType }),
+                body: JSON.stringify({
+                    code,
+                    login_type: loginType,
+                    waba_id: embeddedSignupState.waba_id,
+                    phone_number_id: embeddedSignupState.phone_number_id,
+                }),
             });
 
             const data = await res.json();
 
             if (!res.ok) {
-                reportError(data.error ?? 'Token exchange failed');
+                reportError(data.error ?? 'Account linking failed');
                 setIsExchanging(false);
                 return;
             }
@@ -143,7 +176,7 @@ export default function MetaLoginFrameContent({ loginType }: MetaLoginFrameConte
                 payload: data as MetaAuthResponse,
             });
         } catch {
-            reportError('Token exchange failed');
+            reportError('Account linking failed');
             setIsExchanging(false);
         }
     }

@@ -1,8 +1,9 @@
 export interface MetaAuthResponse {
-    access_token: string;
-    whatsapp_business_id: string;
-    phone_number_id: string;
-    display_phone_number: string;
+    success: boolean;
+    accountId?: string;
+    phoneNumberId?: string;
+    phoneNumber?: string;
+    message?: string;
 }
 
 export interface FacebookSDKConfig {
