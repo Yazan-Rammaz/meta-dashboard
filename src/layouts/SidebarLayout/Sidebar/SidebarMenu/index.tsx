@@ -391,6 +391,13 @@ function SidebarMenu() {
             icon: InfoIcon,
             permission: PAGE_PERMISSIONS.WEBHOOKS,
         },
+        {
+            link: '/integrations',
+            id: 9,
+            label: 'Integration',
+            icon: LinksIcon,
+            permission: '', // No backend permission required yet
+        },
     ];
 
     const isActive = (link: string) => {

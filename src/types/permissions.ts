@@ -40,7 +40,10 @@ export const enum PermissionKey {
   TEMPLATES_UPDATE = 'templates.update',
 
   // Webhooks Permissions
-  WEBHOOKS_READ = 'webhooks.read'
+  WEBHOOKS_READ = 'webhooks.read',
+
+  // Integrations Permissions
+  INTEGRATIONS_READ = 'integrations.read'
 }
 
 export const PAGE_PERMISSIONS = {
@@ -51,5 +54,6 @@ export const PAGE_PERMISSIONS = {
   MESSAGES: PermissionKey.MESSAGES_READ,
   USERS: PermissionKey.USERS_READ,
   TEMPLATES: PermissionKey.TEMPLATES_READ,
-  WEBHOOKS: PermissionKey.WEBHOOKS_READ
+  WEBHOOKS: PermissionKey.WEBHOOKS_READ,
+  INTEGRATIONS: PermissionKey.INTEGRATIONS_READ
 } as const;
