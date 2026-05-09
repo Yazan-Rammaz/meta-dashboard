@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { Dialog, DialogTitle, DialogContent, IconButton, CircularProgress, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material';
+import { useEffect, useRef } from 'react';
 
 interface Props {
   open: boolean;
