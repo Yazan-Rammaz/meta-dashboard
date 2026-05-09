@@ -52,6 +52,15 @@ export const InstancesApi = api.injectEndpoints({
         };
       },
       invalidatesTags: [{ type: 'Instances', id: 'LIST' }]
+    }),
+    connectWhatsapp: builder.mutation<Instance, { code: string }>({
+      query(body) {
+        return {
+          url: `/clients/whatsapp/connect`,
+          method: 'POST',
+          body
+        };
+      }
     })
   })
 });
@@ -60,5 +69,6 @@ export const {
   useGetInstancesQuery,
   useAddInstanceMutation,
   useUpdateInstanceMutation,
-  useDeleteInstanceMutation
+  useDeleteInstanceMutation,
+  useConnectWhatsappMutation
 } = InstancesApi;

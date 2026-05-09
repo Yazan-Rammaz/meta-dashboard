@@ -10,6 +10,10 @@ const nextConfig = {
     REACT_APP_CATEGORY_ICON_PATH: process.env.REACT_APP_CATEGORY_ICON_PATH,
     REACT_APP_BOUTIQUE_ICON_PATH: process.env.REACT_APP_BOUTIQUE_ICON_PATH,
     REACT_APP_BOUTIQUE_BANNERS_PATH: process.env.REACT_APP_BOUTIQUE_BANNERS_PATH,
+    // WhatsApp Integration
+    REACT_APP_WHATSAPP_ID: process.env.NEXT_PUBLIC_WHATSAPP_APP_ID,
+    REACT_APP_WHATSAPP_CONFIG_ID: process.env.NEXT_PUBLIC_WHATSAPP_CONFIG_ID,
+  
   },
   webpack: (config) => {
     config.resolve.alias = {
