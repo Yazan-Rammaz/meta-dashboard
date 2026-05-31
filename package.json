@@ -58,7 +58,7 @@
     "start": "next start",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "cf:build": "opennextjs-cloudflare build && rm -f .open-next/assets/_redirects",
+    "cf:build": "opennextjs-cloudflare build",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && rm -f .open-next/assets/_redirects && opennextjs-cloudflare deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
@@ -92,6 +92,9 @@
     "globals": "^17.4.0",
     "prettier": "^3.8.1",
     "tailwindcss": "^3.4.19",
-    "wrangler": "^4.71.0"
+    "wrangler": "^4.95.0"
+  },
+  "optionalDependencies": {
+    "@cloudflare/workerd-windows-64": "^1.20260531.1"
   }
 }
