@@ -19,18 +19,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
+      # NEXT_PUBLIC_* are inlined into the bundle at build time, so they MUST be
+      # set here. These override the staging values committed in .env.production.
+      - name: Build (OpenNext)
+        run: npx opennextjs-cloudflare build
         env:
           NEXT_PUBLIC_BASE_URL: https://ramaaz-vission-live-frontnode.ramaaz.store/api/v1
           NEXT_PUBLIC_WHATSAPP_APP_ID: "810815398061683"
           NEXT_PUBLIC_WHATSAPP_CONFIG_ID: "1420827336160189"
           NEXT_PUBLIC_META_APP_ID: "810815398061683"
           NEXT_PUBLIC_META_CONFIG_ID: "1420827336160189"
+          WHATSAPP_GATEWAY_URL: https://ramaaz-vission-live-frontnode.ramaaz.store/api/v1
           NEXT_PUBLIC_APP_URL: https://live-meta-whatsapp-dashboard.yazan-adnof.workers.dev
           NEXT_PUBLIC_API_URL: https://ramaaz-vission-live-frontnode.ramaaz.store/accounting_backend/public/api/v3/whatsapp/messages/receive_message
 
       - name: Deploy to Cloudflare Workers
-        run: npx wrangler deploy --env live
+        run: npx opennextjs-cloudflare deploy --env live
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

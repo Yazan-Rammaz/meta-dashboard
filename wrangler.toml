@@ -36,6 +36,8 @@ NEXT_PUBLIC_APP_URL = "https://meta-whatsapp-meta-whatsapp-dashboard.yazan-adnof
 NEXT_PUBLIC_API_URL = "https://ramaaz-vission-live-frontnode.ramaaz.store/accounting_backend/public/api/v3/whatsapp/messages/receive_message"
 
 [env.live]
+name = "live-meta-whatsapp-dashboard"
+
 [env.live.vars]
 NEXT_PUBLIC_BASE_URL = "https://ramaaz-vission-live-frontnode.ramaaz.store/api/v1"
 NEXT_PUBLIC_WHATSAPP_APP_ID = "810815398061683"
