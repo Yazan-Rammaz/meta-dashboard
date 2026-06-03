@@ -1,0 +1,36 @@
+name: Deploy live
+
+on:
+  push:
+    branches:
+      - live
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_URL: https://ramaaz-vission-live-frontnode.ramaaz.store/api/v1
+          NEXT_PUBLIC_WHATSAPP_APP_ID: "810815398061683"
+          NEXT_PUBLIC_WHATSAPP_CONFIG_ID: "1420827336160189"
+          NEXT_PUBLIC_META_APP_ID: "810815398061683"
+          NEXT_PUBLIC_META_CONFIG_ID: "1420827336160189"
+          NEXT_PUBLIC_APP_URL: https://ramaaz-vission-live-frontnode.ramaaz.store
+          NEXT_PUBLIC_API_URL: https://ramaaz-vission-live-frontnode.ramaaz.store/accounting_backend/public/api/v3/whatsapp/messages/receive_message
+
+      - name: Deploy to Cloudflare Workers
+        run: npx wrangler deploy --env live
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
