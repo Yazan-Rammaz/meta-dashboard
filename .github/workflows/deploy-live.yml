@@ -27,7 +27,7 @@ jobs:
           NEXT_PUBLIC_WHATSAPP_CONFIG_ID: "1420827336160189"
           NEXT_PUBLIC_META_APP_ID: "810815398061683"
           NEXT_PUBLIC_META_CONFIG_ID: "1420827336160189"
-          NEXT_PUBLIC_APP_URL: https://ramaaz-vission-live-frontnode.ramaaz.store
+          NEXT_PUBLIC_APP_URL: https://live-meta-whatsapp-dashboard.yazan-adnof.workers.dev
           NEXT_PUBLIC_API_URL: https://ramaaz-vission-live-frontnode.ramaaz.store/accounting_backend/public/api/v3/whatsapp/messages/receive_message
 
       - name: Deploy to Cloudflare Workers
