@@ -4,6 +4,7 @@ import { useToast } from '@/contexts/toastContext';
 import { createTemplateAction } from '@/features/templates/actions';
 import ComponentBuilder from '@/features/templates/components/ComponentBuilder';
 import WhatsAppPreview from '@/features/templates/components/WhatsAppPreview';
+import { queryClient } from '@/lib/queryClient';
 import { Template, TemplateComponent } from '@/models/templates';
 import { useGetClientsInfiniteQuery } from '@/services/clients';
 import {
@@ -80,6 +81,9 @@ export default function CreateTemplatePage() {
         startTransition(async () => {
             const result = await createTemplateAction(payload);
             if (result.success) {
+                result.invalidateKeys?.forEach((k) =>
+                    queryClient.invalidateQueries({ queryKey: [k] }),
+                );
                 showSuccess('Template created successfully');
                 router.push('/templates');
             } else {
