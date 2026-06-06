@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import MetaLoginFrameContent from '@/features/clients/components/MetaLoginFrameContent';
 
 interface MetaLoginFramePageProps {

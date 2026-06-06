@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import TemplatesPage from '@/features/templates/components/TemplatesPage';
 import { apiFetch } from '@/lib/apiFetch';
 import { PaginatedResponse } from '@/models/pagination';

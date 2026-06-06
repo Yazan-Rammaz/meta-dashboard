@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import CreateTemplatePage from '@/features/templates/components/CreateTemplatePage';
 import { Container } from '@mui/material';
 import Link from 'next/link';

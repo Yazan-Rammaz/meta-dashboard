@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import RolesPageComponent from '@/features/roles/components/RolesPage';
 import { apiFetch } from '@/lib/apiFetch';
 import type { PaginatedResponse } from '@/models/pagination';

@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import Clients from '@/features/clients/components/ClientsPage';
 import { apiFetch } from '@/lib/apiFetch';
 import type { Client } from '@/models/clients';

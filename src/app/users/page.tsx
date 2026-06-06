@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import Users from '@/features/users/components/UsersPage';
 import { apiFetch } from '@/lib/apiFetch';
 import type { PaginatedResponse } from '@/models/pagination';
