@@ -58,8 +58,8 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "cf:build": "next build && npx @cloudflare/next-on-pages",
-    "deploy": "npm run cf:build && wrangler pages deploy .vercel/output/static --project-name meta-whatsapp-dashboard",
-    "deploy:live": "npm run cf:build && wrangler pages deploy .vercel/output/static --project-name live-meta-whatsapp-dashboard",
+    "deploy": "npm run cf:build && wrangler pages deploy .vercel/output/static --project-name meta-dashboard",
+    "deploy:live": "npm run cf:build && wrangler pages deploy .vercel/output/static --project-name meta-dashboard --branch main",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "format": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\" --config ./.prettierrc"
   },
