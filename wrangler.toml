@@ -2,3 +2,25 @@ name = "meta-dashboard"
 pages_build_output_dir = ".vercel/output/static"
 compatibility_date = "2026-03-06"
 compatibility_flags = ["nodejs_compat"]
+
+# Production (live) environment variables
+[vars]
+NEXT_PUBLIC_BASE_URL = "https://whatsapi.ramaaz.store/api/v1"
+NEXT_PUBLIC_WHATSAPP_APP_ID = "810815398061683"
+NEXT_PUBLIC_WHATSAPP_CONFIG_ID = "1420827336160189"
+NEXT_PUBLIC_META_APP_ID = "810815398061683"
+NEXT_PUBLIC_META_CONFIG_ID = "1420827336160189"
+WHATSAPP_GATEWAY_URL = "https://whatsapi.ramaaz.store/api/v1"
+NEXT_PUBLIC_APP_URL = "https://meta-dashboard-6jy.pages.dev"
+NEXT_PUBLIC_API_URL = "https://ramaaz-vission-live-frontnode.ramaaz.store/accounting_backend/public/api/v3/whatsapp/messages/receive_message"
+
+# Staging (preview) environment variables
+[env.preview.vars]
+NEXT_PUBLIC_BASE_URL = "https://staging-backend.ramaaz.store/api/v1"
+NEXT_PUBLIC_WHATSAPP_APP_ID = "810815398061683"
+NEXT_PUBLIC_WHATSAPP_CONFIG_ID = "1420827336160189"
+NEXT_PUBLIC_META_APP_ID = "810815398061683"
+NEXT_PUBLIC_META_CONFIG_ID = "1420827336160189"
+WHATSAPP_GATEWAY_URL = "https://staging-backend.ramaaz.store/api/v1"
+NEXT_PUBLIC_APP_URL = "https://staging.meta-dashboard-6jy.pages.dev"
+NEXT_PUBLIC_API_URL = "https://vission_staging.ramaaz.dev/accounting_backend/public/api/v3/whatsapp/messages/receive_message"
