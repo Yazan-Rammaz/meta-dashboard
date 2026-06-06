@@ -17,7 +17,6 @@
     "@mui/material": "^7.3.9",
     "@mui/styles": "^6.5.0",
     "@mui/x-date-pickers": "^8.27.2",
-    "@opennextjs/cloudflare": "^1.17.1",
     "@tanstack/react-query": "^5.90.21",
     "apexcharts": "^5.10.3",
     "array-move": "^4.0.0",
@@ -58,11 +57,9 @@
     "start": "next start",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "cf:build": "opennextjs-cloudflare build",
-    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-"deploy:prod": "opennextjs-cloudflare build && opennextjs-cloudflare deploy --env meta-whatsapp",
-    "deploy:live": "opennextjs-cloudflare build && opennextjs-cloudflare deploy --env live",
+    "cf:build": "next build && npx @cloudflare/next-on-pages",
+    "deploy": "npm run cf:build && wrangler pages deploy .vercel/output/static --project-name meta-whatsapp-dashboard",
+    "deploy:live": "npm run cf:build && wrangler pages deploy .vercel/output/static --project-name live-meta-whatsapp-dashboard",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "format": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\" --config ./.prettierrc"
   },
@@ -79,6 +76,7 @@
     ]
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@tanstack/react-query-devtools": "^5.91.3",
     "@types/facebook-js-sdk": "^3.3.12",
     "@types/node": "^25.3.5",

@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
+        unoptimized: true, // Cloudflare Pages has no Node.js image optimisation server
         remotePatterns: [
             {
                 protocol: 'https',
