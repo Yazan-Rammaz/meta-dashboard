@@ -64,10 +64,10 @@ export default function WhatsAppPreview({
     category,
     compact = false,
 }: WhatsAppPreviewProps) {
-    const getHeader = () => components.find((c) => c.type === 'HEADER');
+    const getHeader = () => components.find((c) => c.type === 'header');
     const getBody = () => components.find((c) => c.type === 'body');
-    const getFooter = () => components.find((c) => c.type === 'FOOTER');
-    const getButtons = () => components.find((c) => c.type === 'BUTTONS');
+    const getFooter = () => components.find((c) => c.type === 'footer');
+    const getButtons = () => components.find((c) => c.type === 'buttons');
 
     const header = getHeader();
     const body = getBody();

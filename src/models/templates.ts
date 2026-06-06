@@ -23,7 +23,7 @@ export type TemplateComponent =
     | ButtonsComponent;
 
 export interface HeaderComponent {
-    type: 'HEADER';
+    type: 'header';
     format: 'TEXT' | 'IMAGE' | 'LOCATION' | 'DOCUMENT';
     text?: string;
     example?: { header_handle: string[] } | { header_url: string[] };
@@ -51,17 +51,17 @@ export interface AuthBodyComponent {
 }
 
 export interface FooterComponent {
-    type: 'FOOTER';
+    type: 'footer';
     text: string;
 }
 
 export interface AuthFooterComponent {
-    type: 'FOOTER';
+    type: 'footer';
     code_expiration_minutes: number;
 }
 
 export interface ButtonsComponent {
-    type: 'BUTTONS';
+    type: 'buttons';
     buttons: Button[];
 }
 

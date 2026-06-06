@@ -1,7 +1,6 @@
 'use client';
 import { Box, styled, Typography } from '@mui/material';
 import Grid2 from '@mui/material/Grid';
-import { useEffect } from 'react';
 
 const DashboardWrapper = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4),
@@ -9,12 +8,8 @@ const DashboardWrapper = styled(Box)(({ theme }) => ({
         padding: theme.spacing(2),
     },
 }));
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000/api/v1';
 
 const DashboardHome = () => {
-    useEffect(() => {
-        console.log(`baseUrl: ${baseUrl}`);
-    }, [baseUrl]);
 
     return (
         <DashboardWrapper>

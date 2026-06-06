@@ -5,6 +5,7 @@ import { useContext, useRef, useState } from 'react';
 
 import { TranslationContext } from '@/contexts/appLangContext';
 import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
 import { Lock } from '@mui/icons-material';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
@@ -54,6 +55,23 @@ function HeaderUserbox() {
         setOpen(false);
     };
     const { language_code, changeLanguage } = useContext(TranslationContext);
+
+    const handleSignOut = async (): Promise<void> => {
+        // Delete the HttpOnly access_token cookie on the server (the real session)
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+        } catch {
+            // Ignore network errors — still clear client state below
+        }
+        // Clear the persisted Zustand auth store (user + access_token)
+        useAuthStore.getState().logout();
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('auth-store');
+            // Full navigation to /login to drop any stale in-memory state
+            window.location.href = '/login';
+        }
+    };
+
     return (
         <>
             <Button color="secondary" ref={ref} onClick={handleOpen} sx={{ padding: '0px' }}>
@@ -106,12 +124,7 @@ function HeaderUserbox() {
                     <Button
                         color="secondary"
                         fullWidth
-                        onClick={() => {
-                            if (typeof window !== 'undefined') {
-                                localStorage.clear();
-                            }
-                            window.location.reload();
-                        }}
+                        onClick={handleSignOut}
                     >
                         <LockOpenTwoToneIcon sx={{ mr: 1 }} />
                         SignOut

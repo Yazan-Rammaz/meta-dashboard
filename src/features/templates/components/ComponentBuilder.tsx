@@ -32,8 +32,8 @@ export default function ComponentBuilder({
     const handleAddComponent = (type: TemplateComponent['type']) => {
         let newComponent: TemplateComponent;
 
-        if (type === 'HEADER') {
-            newComponent = { type: 'HEADER', format: 'TEXT', text: '' } as HeaderComponentType;
+        if (type === 'header') {
+            newComponent = { type: 'header', format: 'TEXT', text: '' } as HeaderComponentType;
         } else if (type === 'body') {
             if (category === 'AUTHENTICATION') {
                 newComponent = {
@@ -43,17 +43,17 @@ export default function ComponentBuilder({
             } else {
                 newComponent = { type: 'body', text: '' } as BodyComponentType;
             }
-        } else if (type === 'FOOTER') {
+        } else if (type === 'footer') {
             if (category === 'AUTHENTICATION') {
                 newComponent = {
-                    type: 'FOOTER',
+                    type: 'footer',
                     code_expiration_minutes: 5,
                 } as AuthFooterComponentType;
             } else {
-                newComponent = { type: 'FOOTER', text: '' } as FooterComponentType;
+                newComponent = { type: 'footer', text: '' } as FooterComponentType;
             }
-        } else if (type === 'BUTTONS') {
-            newComponent = { type: 'BUTTONS', buttons: [] } as ButtonsComponentType;
+        } else if (type === 'buttons') {
+            newComponent = { type: 'buttons', buttons: [] } as ButtonsComponentType;
         } else {
             return;
         }
@@ -81,7 +81,7 @@ export default function ComponentBuilder({
             // Add other common props if needed
         };
 
-        if (component.type === 'HEADER') {
+        if (component.type === 'header') {
             return (
                 <HeaderComponent
                     key={index}
@@ -110,7 +110,7 @@ export default function ComponentBuilder({
                 />
             );
         }
-        if (component.type === 'FOOTER') {
+        if (component.type === 'footer') {
             if (category === 'AUTHENTICATION') {
                 return (
                     <AuthFooterComponent
@@ -128,7 +128,7 @@ export default function ComponentBuilder({
                 />
             );
         }
-        if (component.type === 'BUTTONS') {
+        if (component.type === 'buttons') {
             return (
                 <ButtonsComponent
                     key={index}
@@ -148,8 +148,8 @@ export default function ComponentBuilder({
             </Typography>
 
             <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-                {!hasComponent('HEADER') && category !== 'AUTHENTICATION' && (
-                    <Button variant="outlined" onClick={() => handleAddComponent('HEADER')}>
+                {!hasComponent('header') && category !== 'AUTHENTICATION' && (
+                    <Button variant="outlined" onClick={() => handleAddComponent('header')}>
                         Add Header
                     </Button>
                 )}
@@ -158,13 +158,13 @@ export default function ComponentBuilder({
                         Add Body
                     </Button>
                 )}
-                {!hasComponent('FOOTER') && (
-                    <Button variant="outlined" onClick={() => handleAddComponent('FOOTER')}>
+                {!hasComponent('footer') && (
+                    <Button variant="outlined" onClick={() => handleAddComponent('footer')}>
                         Add Footer
                     </Button>
                 )}
-                {!hasComponent('BUTTONS') && (
-                    <Button variant="outlined" onClick={() => handleAddComponent('BUTTONS')}>
+                {!hasComponent('buttons') && (
+                    <Button variant="outlined" onClick={() => handleAddComponent('buttons')}>
                         Add Buttons
                     </Button>
                 )}
@@ -172,7 +172,11 @@ export default function ComponentBuilder({
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {components.map((c, i) => (
-                    <ComponentCard key={i} title={c.type} onDelete={() => handleRemoveComponent(i)}>
+                    <ComponentCard
+                        key={i}
+                        title={c.type.toLowerCase()}
+                        onDelete={() => handleRemoveComponent(i)}
+                    >
                         {renderComponent(c, i)}
                     </ComponentCard>
                 ))}
