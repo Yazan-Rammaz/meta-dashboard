@@ -9,6 +9,7 @@
 /specs/*
 /.history/*
 /.open-next/*
+/.vercel/*
 .pnp.js
 
 # testing
