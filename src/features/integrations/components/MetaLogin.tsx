@@ -29,7 +29,7 @@ export default function MetaLogin() {
         }
       },
       {
-        config_id: '1152763150124458',
+        config_id: process.env.NEXT_PUBLIC_META_CONFIG_ID,
         response_type: 'code',
         override_default_response_type: true,
         extras: {
