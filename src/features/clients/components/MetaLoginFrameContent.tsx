@@ -6,10 +6,11 @@ import {
 } from '@/features/clients/components/metaLoginFrameMessages';
 import { MetaAuthResponse } from '@/models/metaAuth';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface MetaLoginFrameContentProps {
-    loginType: 'whatsapp' | 'meta';
+    loginType?: 'whatsapp' | 'meta';
 }
 
 type SdkStatus = 'loading' | 'ready' | 'error';
@@ -41,7 +42,10 @@ interface EmbeddedSignupState {
     phone_number_id?: string;
 }
 
-export default function MetaLoginFrameContent({ loginType }: MetaLoginFrameContentProps) {
+export default function MetaLoginFrameContent({ loginType: loginTypeProp }: MetaLoginFrameContentProps) {
+    const searchParams = useSearchParams();
+    const loginType: 'whatsapp' | 'meta' =
+        loginTypeProp ?? (searchParams.get('loginType') === 'meta' ? 'meta' : 'whatsapp');
     const [sdkStatus, setSdkStatus] = useState<SdkStatus>('loading');
     const [isExchanging, setIsExchanging] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
