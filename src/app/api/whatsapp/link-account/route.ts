@@ -29,7 +29,13 @@ export async function POST(req: Request) {
             );
         }
 
-        const gatewayBase = process.env.WHATSAPP_GATEWAY_URL;
+        // The gateway base may or may not already include a trailing `/api/v1`
+        // (e.g. it mirrors NEXT_PUBLIC_BASE_URL). Normalise to the host root so
+        // the `/api/v1/...` endpoints below don't produce a doubled `/api/v1`.
+        const gatewayBase = process.env.WHATSAPP_GATEWAY_URL?.replace(/\/+$/, '').replace(
+            /\/api\/v1$/,
+            '',
+        );
         const frontURL = process.env.NEXT_PUBLIC_APP_URL;
         const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
