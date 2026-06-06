@@ -5,7 +5,7 @@ import Script from 'next/script';
 export default function MetaLogin() {
   function initFB() {
     (window as any).FB.init({
-      appId: process.env.REACT_APP_META_ID,
+      appId: process.env.NEXT_PUBLIC_META_APP_ID,
       cookie: true,
       xfbml: true,
       version: 'v18.0',
